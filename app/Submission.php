@@ -28,9 +28,8 @@ class Submission extends BaseModel{
     }
 
     protected $fillable = [
-        "image",
-        "caption",
-        "country_id"
+        self::COUNTRY_ID,
+        self::CANDIDATE_ID,
     ];
 
 

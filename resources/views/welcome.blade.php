@@ -11,7 +11,7 @@
     </div>
 
     <div class="col-md-12 col-xs-12" id="play">
-        <form class="form-group" method="POST" action="" id="submissionForm">
+        <form class="form-group" method="POST" action="" id="submissionForm" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{csrf_token()}}">
             <input type="file" name="submission_image" class="form-control" required>
             <label for="name">name</label>
@@ -99,6 +99,7 @@
                 e.preventDefault();
                 var formData = new FormData($(this)[0]);
 //                formData.append("submission_image", file);
+                formData.append("serial_number", "F9:32:28:15:88:13");
                 var oReq = new XMLHttpRequest();
                 oReq.open("POST", "submission/create");
                 oReq.send(formData);

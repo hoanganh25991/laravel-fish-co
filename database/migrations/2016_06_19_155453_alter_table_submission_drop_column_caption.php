@@ -4,7 +4,7 @@ use App\Submission;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterTableSubmissionDropColumnImageUrl extends Migration{
+class AlterTableSubmissionDropColumnCaption extends Migration{
     /**
      * Run the migrations.
      *
@@ -12,7 +12,7 @@ class AlterTableSubmissionDropColumnImageUrl extends Migration{
      */
     public function up(){
         Schema::table(Submission::TABLE, function (Blueprint $table){
-            $table->dropColumn(Submission::IMAGE_URL);
+            $table->dropColumn(Submission::CAPTION);
         });
     }
 
@@ -23,7 +23,7 @@ class AlterTableSubmissionDropColumnImageUrl extends Migration{
      */
     public function down(){
         Schema::table(Submission::TABLE, function (Blueprint $table){
-            $table->mediumText(Submission::IMAGE_URL);
+            $table->string(Submission::CAPTION);
         });
     }
 }

@@ -9,11 +9,12 @@ class Image extends BaseModel{
     const SIZE = "size";
     const PATH = "path";
     const STYLE = "style";
+    const CAPTION = "caption";
 
     /**
-     * unit: MB
+     * unit: Byte
      */
-    const MAXIMUM_FILE_SIZE = 6;
+    const MAXIMUM_FILE_SIZE = 6 * 1024 * 1024;
 
     const STYLE_ORIGIN = "origin";
     const STYLE_THUMBNAIl = "thumbnail";
@@ -21,4 +22,28 @@ class Image extends BaseModel{
 
     const TABLE = "image";
     protected $table = self::TABLE;
+
+    protected $fillable = [
+        self::NAME,
+        self::CAPTION,
+        self::TYPE,
+        self::SIZE,
+        self::STYLE,
+        self::PATH,
+    ];
+
+    public function setNameAttribute(){
+        if(empty($this->attributes[self::CAPTION])){
+            /**
+             * not need to check on attribute "name"
+             */
+            if(isset($this->attributes[self::NAME])){
+                $this->attributes[self::CAPTION] = $this->attributes[self::NAME];
+            }
+        }
+    }
+
+    public function maxFileSize(){
+        return self::MAXIMUM_FILE_SIZE;
+    }
 }

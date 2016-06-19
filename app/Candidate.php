@@ -12,11 +12,16 @@ class Candidate extends BaseModel{
     const TABLE = "candidate";
 
     protected $table = self::TABLE;
-    
+    protected $fillable = [
+        self::NAME,
+        self::EMAIL,
+        self::CONTACT_NUMBER
+    ];
+
     public function submission(){
         return $this->hasMany(Submission::class, Submission::CANDIDATE_ID, self::ID);
     }
-    
+
     public function device(){
         return $this->hasMany(Device::class, Device::CANDIDATE_ID, self::ID);
     }

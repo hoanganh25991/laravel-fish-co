@@ -10,8 +10,15 @@ class Device extends BaseModel{
 
     const TABLE = "device";
     protected $table = self::TABLE;
+    protected $fillable = [
+        self::SERIAL_NUMBER,
+        self::DES,
+        self::CANDIDATE_ID
+    ];
 
     public function candidate(){
         return $this->hasOne(Candidate::class, Candidate::ID, self::CANDIDATE_ID);
     }
+
+
 }

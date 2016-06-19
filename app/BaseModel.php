@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\ModelForeignKey;
+use App\Traits\ModelIndex;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class BaseModel
@@ -13,6 +14,8 @@ use App\Traits\ModelForeignKey;
 
 class BaseModel extends Model{
     use ModelForeignKey;
+    use ModelIndex;
+    
 //    /**
 //     * @param string $column column name
 //     * @return string
