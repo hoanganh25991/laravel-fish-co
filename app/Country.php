@@ -10,6 +10,6 @@ class Country extends BaseModel{
     protected $table = self::TABLE;
     
     public function store(){
-        return $this->hasMany(Store::class, self::ID);
+        return $this->hasMany(Store::class, Store::COUNTRY_ID, self::ID);
     }
 }

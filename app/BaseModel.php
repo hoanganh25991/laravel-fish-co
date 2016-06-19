@@ -5,6 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\ModelForeignKey;
 
+/**
+ * Class BaseModel
+ * @package App
+ * @method static firstOrFail($id)
+ */
+
 class BaseModel extends Model{
     use ModelForeignKey;
 //    /**

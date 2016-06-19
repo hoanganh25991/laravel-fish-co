@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('', function () {
     return view('welcome');
 });
+Route::get("store/index", "StoreController@index");
+Route::get("store/{countryId}", "StoreController@byCountry");
