@@ -11,9 +11,16 @@
 |
 */
 
-Route::get('', function () {
+Route::get('', function (){
     return view('welcome');
 });
 Route::get("store/index", "StoreController@index");
 Route::get("store/{countryId}", "StoreController@byCountry");
 Route::get("campaign/index", "CampaignController@index");
+/**
+ * Base on device.serial_number detect new/old candidate
+ */
+Route::get("token", "TokenController@get");
+Route::post("candidate/verify", "CandidateController@verify");
+
+Route::post("submission/create", "SubmissionController@create");
