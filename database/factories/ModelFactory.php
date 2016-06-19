@@ -11,6 +11,8 @@
 |
 */
 /** @var Factory $factory */
+use Faker\Generator as Faker;
+use App\Campaign;
 use Illuminate\Database\Eloquent\Factory;
 use App\Candidate;
 use App\Country;
@@ -18,7 +20,7 @@ use App\Device;
 use App\Store;
 use App\Submission;
 
-$factory->define(Candidate::class, function (Faker\Generator $faker){
+$factory->define(Candidate::class, function (Faker $faker){
     return [
         Candidate::NAME => $faker->name,
         Candidate::EMAIL => $faker->safeEmail,
@@ -26,7 +28,7 @@ $factory->define(Candidate::class, function (Faker\Generator $faker){
     ];
 });
 
-$factory->define(Country::class, function (Faker\Generator $faker){
+$factory->define(Country::class, function (Faker $faker){
     $countryNameArray = [
         "Vietnam",
         "Malaysia",
@@ -39,7 +41,7 @@ $factory->define(Country::class, function (Faker\Generator $faker){
     ];
 });
 
-$factory->define(Device::class, function (Faker\Generator $faker){
+$factory->define(Device::class, function (Faker $faker){
     $candidateIdArray = Candidate::lists(Candidate::ID)->toArray();
 //    dd($candidateIdArray);
     return [
@@ -49,7 +51,7 @@ $factory->define(Device::class, function (Faker\Generator $faker){
     ];
 });
 
-$factory->define(Store::class, function (Faker\Generator $faker){
+$factory->define(Store::class, function (Faker $faker){
     $countryIdArray = Country::lists(Country::ID)->toArray();
     return [
         Store::NAME => $faker->name,
@@ -59,7 +61,7 @@ $factory->define(Store::class, function (Faker\Generator $faker){
     ];
 });
 
-$factory->define(Submission::class, function (Faker\Generator $faker){
+$factory->define(Submission::class, function (Faker $faker){
     $candidateIdArray = Candidate::lists(Candidate::ID)->toArray();
     $countryIdArray = Country::lists(Country::ID)->toArray();
     return [
@@ -67,5 +69,12 @@ $factory->define(Submission::class, function (Faker\Generator $faker){
         Submission::IMAGE_URL => $faker->imageUrl(),
         Submission::CANDIDATE_ID => $faker->randomElement($candidateIdArray),
         Submission::COUNTRY_ID => $faker->randomElement($countryIdArray),
+    ];
+});
+
+$factory->define(Campaign::class, function(Faker $faker){
+    return [
+        Campaign::TITLE => $faker->sentences(1, true),
+        Campaign::DES => $faker->paragraphs(1, true),
     ];
 });

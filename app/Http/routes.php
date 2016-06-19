@@ -16,3 +16,4 @@ Route::get('', function () {
 });
 Route::get("store/index", "StoreController@index");
 Route::get("store/{countryId}", "StoreController@byCountry");
+Route::get("campaign/index", "CampaignController@index");

@@ -75,6 +75,11 @@
             var url = "store/4";
             $.get(url, logRes);
         });
+
+        $("#btnCampaign").on("click", function(){
+            var url = "campaign/index";
+            $.get(url, logRes);
+        });
     })(jQuery);
 </script>
 </body>

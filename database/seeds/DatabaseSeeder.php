@@ -1,5 +1,6 @@
 <?php
 
+use App\Campaign;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use App\Candidate;
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
 //        factory(Device::class, 30)->create();
 //        factory(Store::class, 65)->create();
 //        factory(Submission::class, 100)->create();
+        factory(Campaign::class, 1)->create();
         Model::reguard();
     }
 }

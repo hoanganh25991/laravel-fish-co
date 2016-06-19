@@ -1,8 +1,12 @@
 <?php
 
 namespace App;
+use Codesleeve\Stapler\ORM\StaplerableInterface;
+use Codesleeve\Stapler\ORM\EloquentTrait;
 
-class Submission extends BaseModel{
+class Submission extends BaseModel implements StaplerableInterface{
+    use EloquentTrait;
+
     const ID = "id";
     const IMAGE_URL = "image_url";
     const CAPTION = "caption";
@@ -24,4 +28,19 @@ class Submission extends BaseModel{
     public function candidate(){
         return $this->hasOne(Candidate::class, Candidate::ID, self::CANDIDATE_ID);
     }
+// Add the "image" attachment to the fillable array so that it"s mass-assignable on this model.
+    protected $fillable = ["image", "caption", "country_id"];
+
+    public function __construct(array $attributes = array()) {
+        $this->hasAttachedFile("image", [
+            "styles" => [
+                "medium" => "300x300",
+                "thumb" => "100x100"
+            ]
+        ]);
+        parent::__construct($attributes);
+    }
+
+    
+    
 }
