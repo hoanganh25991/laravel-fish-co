@@ -16,4 +16,8 @@ class Candidate extends BaseModel{
     public function submission(){
         return $this->hasMany(Submission::class, self::ID);
     }
+    
+    public function device(){
+        return $this->hasMany(Device::class, self::ID);
+    }
 }

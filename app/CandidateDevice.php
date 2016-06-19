@@ -11,10 +11,10 @@ class CandidateDevice extends BaseModel{
     protected $table = self::TABLE;
     
     public function device(){
-        return $this->hasMany(Device::class, Device::ID, self::DEVICE_ID);
+        return $this->hasOne(Device::class, Device::ID, self::DEVICE_ID);
     }
     
     public function candidate(){
-        return $this->hasMany(Candidate::class, Candidate::ID, self::CANDIDATE_ID);
+        return $this->hasOne(Candidate::class, Candidate::ID, self::CANDIDATE_ID);
     }
 }
