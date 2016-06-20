@@ -21,9 +21,9 @@ at root project, base on .env.example, create .env file
 	#some important infomation need provided
 	DB_HOST=127.0.0.1
 	DB_PORT=3306
-	DB_DATABASE=fish_go
-	DB_USERNAME=root
-	DB_PASSWORD=ifrc
+	DB_DATABASE=fishco
+	DB_USERNAME=fishco
+	DB_PASSWORD=2bs5KEUyDGLD4SCp
 
 	UPLOAD_FOLDER=D:\work-station\laravel-fish-go\public\upload
 	FISH_CO_KEY=whalefishcomeco
