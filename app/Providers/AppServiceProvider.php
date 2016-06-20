@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extend("isImage", 'App\Image@isImage');
+        Validator::extend("token", 'App\Http\Controllers\TokenController@check');
     }
 
     /**

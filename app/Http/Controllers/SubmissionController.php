@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Candidate;
 use App\Device;
+use App\Http\Requests;
 use App\Image;
 use App\Submission;
 use App\SubmissionImage;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Response;
-use Validator;
-
 use stdClass;
+use Validator;
 
 class SubmissionController extends Controller{
     const WARNING = "sorry, we still not handle this situation";
@@ -27,6 +24,7 @@ class SubmissionController extends Controller{
          * validate
          */
         $validator = Validator::make($request->all(), [
+            "_token" => "bail|required|token",
             SubmissionImage::TABLE => "bail|required",
             Candidate::CONTACT_NUMBER => "bail|required",
         ]);

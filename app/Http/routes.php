@@ -21,6 +21,10 @@ Route::get("campaign/index", "CampaignController@index");
  * Base on device.serial_number detect new/old candidate
  */
 Route::get("token", "TokenController@get");
+Route::post("token", "TokenController@get");
+
+Route::get("token/check/{md5Hash}", "TokenController@checkToken2");
+
 Route::post("candidate/verify", "CandidateController@verify");
 
 Route::post("submission/create", "SubmissionController@create");
