@@ -46,4 +46,12 @@ class Image extends BaseModel{
     public function maxFileSize(){
         return self::MAXIMUM_FILE_SIZE;
     }
+
+    public function isImage($attribute, $value, $parameters, $validator){
+        $isImaged = exif_imagetype($value);
+        if(!$isImaged){
+            return false;
+        }
+        return true;
+    }
 }

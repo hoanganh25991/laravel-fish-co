@@ -13,6 +13,8 @@ use App\Http\Requests;
 use Response;
 use Validator;
 
+use stdClass;
+
 class SubmissionController extends Controller{
     const WARNING = "sorry, we still not handle this situation";
 
@@ -60,6 +62,12 @@ class SubmissionController extends Controller{
                     $device = new Device($request->all());
                     $device->candidate_id = $candidate->id;
                     $device->save();
+
+                    /**
+                     * update candidate info (name)
+                     */
+                    $candidate->fill($request->all());
+                    $candidate->save();
                 }
 
                 if($device){
@@ -72,6 +80,8 @@ class SubmissionController extends Controller{
                     }
                 }
             }
+
+
             /**
              * create Submission
              */
@@ -84,17 +94,31 @@ class SubmissionController extends Controller{
             if($imageFile["error"] == 0){
                 $image = new Image();
                 /**
-                 * check type
+                 * check image type by HAND
+                 * bcs we has modified on FILE by FormData
+                 * >no signature (encrypt=multiparr/form-data)
+                 */
+//                $isImaged = exif_imagetype($imageFile["tmp_name"]);
+//                dd($isImaged);
+//                if($isImaged){
+//                    return Response::json(["isImage" => $isImaged]);
+//                }
+//                if(!$isImaged){
+//                    return Response::json([Image::TABLE => "{$imageFile["name"]} is not an image"], 423);
+//                }
+                /**
+                 * PUSH custom validator in to Image@isImage
+                 * ^^ cool right
                  */
                 $validator = Validator::make($imageFile, [
-//                    "type" => "bail|image",
+//                    "tmp_name" => "bail|image|mimes:jpeg,jpg,png",
+"tmp_name" => "bail|isImage",
 //                    "type" => "bail|mimes:jpeg,jpg,png",
 "size" => "bail|max:{$image->maxFileSize()}",
                 ]);
                 if($validator->fails()){
                     return Response::json([
-                        $validator->getMessageBag()->toArray(),
-                        "type" => $imageFile["type"]
+                        $validator->getMessageBag()->toArray()
                     ], 420);
                 }
                 if(!$validator->fails()){
@@ -159,6 +183,26 @@ class SubmissionController extends Controller{
 
 
 //            return json_encode(["hello" => "world"]);
+        }
+        return json_encode(self::WARNING);
+    }
+
+    public function index(Request $request){
+        /**
+         * base on serial number of device
+         * >find out candidate & his submission
+         */
+        $serialNumber = $request->get(Device::SERIAL_NUMBER);
+        /**
+         * @warn load device > candidate > submission
+         * what if device > candidate but candidate =  null
+         */
+        $candidate = Device::with("candidate.submission")->where(Device::SERIAL_NUMBER, $serialNumber)->first();
+        if(!$candidate){
+            return json_encode(new stdClass);
+        }
+        if($candidate){
+            return Response::json($candidate->toArray(), 200);
         }
         return json_encode(self::WARNING);
     }

@@ -24,4 +24,5 @@ Route::get("token", "TokenController@get");
 Route::post("candidate/verify", "CandidateController@verify");
 
 Route::post("submission/create", "SubmissionController@create");
-Route::get("submission/create", "SubmissionController@create");
+//Route::get("submission/create", "SubmissionController@create");
+Route::post("submission/index", "SubmissionController@index");
