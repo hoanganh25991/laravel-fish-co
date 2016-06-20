@@ -10,7 +10,6 @@ use App\Submission;
 use App\SubmissionImage;
 use Illuminate\Http\Request;
 use Response;
-use stdClass;
 use Validator;
 
 class SubmissionController extends Controller{

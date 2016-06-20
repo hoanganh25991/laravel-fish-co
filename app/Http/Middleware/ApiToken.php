@@ -10,6 +10,8 @@ class ApiToken{
     const STATUS_CODE = "statusCode";
     const STATUS_MSG = "statusMsg";
     const DATA = "data";
+    const WARNING = "sorry, we still not handle this situation";
+
     /**
      * Handle an incoming request.
      *

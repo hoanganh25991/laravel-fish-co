@@ -28,7 +28,7 @@ Route::post("campaign/index", "CampaignController@index");
 Route::get("token", "TokenController@get");
 Route::post("token", "TokenController@get");
 
-Route::get("token/check/{md5Hash}", "TokenController@checkToken2");
+Route::get("token/test/{md5Hash}", "TokenController@testToken");
 
 Route::post("candidate/verify", "CandidateController@verify");
 /**
