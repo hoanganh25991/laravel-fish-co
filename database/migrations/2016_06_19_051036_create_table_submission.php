@@ -19,7 +19,7 @@ class CreateTableSubmission extends Migration
             $table->string(Submission::CAPTION);
             $table->mediumText(Submission::IMAGE_URL);
             $table->unsignedInteger(Submission::COUNTRY_ID);
-            $table->unsignedInteger(Submission::CANDIDATE_ID);
+            $table->unsignedInteger(Submission::USER_ID);
         });
     }
 
