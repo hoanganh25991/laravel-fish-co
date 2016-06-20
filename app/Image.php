@@ -14,7 +14,7 @@ class Image extends BaseModel{
     /**
      * unit: Byte
      */
-    const MAXIMUM_FILE_SIZE = (6 * 1024 * 1024);
+    const MAXIMUM_FILE_SIZE = 20480000;
 
     const STYLE_ORIGIN = "origin";
     const STYLE_THUMBNAIl = "thumbnail";
