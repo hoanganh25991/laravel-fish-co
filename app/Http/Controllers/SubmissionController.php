@@ -7,6 +7,7 @@ use App\Device;
 use App\Image;
 use App\Submission;
 use App\SubmissionImage;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,6 +18,9 @@ use stdClass;
 
 class SubmissionController extends Controller{
     const WARNING = "sorry, we still not handle this situation";
+    const STATUS_CODE = "statusCode";
+    const STATUS_MSG = "statusMsg";
+    const DATA = "data";
 
     public function create(Request $request){
         /**
@@ -28,7 +32,11 @@ class SubmissionController extends Controller{
         ]);
 
         if($validator->fails()){
-            return Response::json($validator->getMessageBag()->toArray(), 422);
+            return Response::json([
+                self::STATUS_CODE => 422,
+                self::STATUS_MSG => "validate fail",
+                self::DATA => $validator->getMessageBag()->toArray()
+            ], 422);
         }
 
         if(!$validator->fails()){
@@ -76,7 +84,11 @@ class SubmissionController extends Controller{
                          * he borrow phone from some one
                          * NOT ALLOW
                          */
-                        return Response::json([Candidate::TABLE => $device->candidate->toArray()], 418);
+                        return Response::json([
+                            self::STATUS_CODE => 418,
+                            self::STATUS_MSG => "borrow phone, device not belongsTo contact_number",
+                            self::DATA => $device->candidate->toArray()
+                        ], 418);
                     }
                 }
             }
@@ -118,7 +130,9 @@ class SubmissionController extends Controller{
                 ]);
                 if($validator->fails()){
                     return Response::json([
-                        $validator->getMessageBag()->toArray()
+                        self::STATUS_CODE => 420,
+                        self::STATUS_MSG => "uploaded image, validate fail",
+                        self::DATA => $validator->getMessageBag()->toArray()
                     ], 420);
                 }
                 if(!$validator->fails()){
@@ -165,19 +179,30 @@ class SubmissionController extends Controller{
                         $sI->image_id = $image->id;
                         $sI->submission_id = $submission->id;
                         $sI->save();
-                        return Response::json(["hello" => "world"]);
+                        return Response::json([
+                            self::STATUS_CODE => 200,
+                            self::STATUS_MSG => "success create submission",
+                        ]);
                     }else{
                         /**
                          * can not move file
                          * permission/ect
                          */
-                        return Response::json([Image::TABLE => $imageFile], 421);
+                        return Response::json([
+                            self::STATUS_CODE => 421,
+                            self::STATUS_MSG => "can not move file",
+                            self::DATA => $imageFile
+                        ], 421);
                     }
                 }
             }
 
             if($imageFile["error"] > 0){
-                return Response::json([Image::TABLE => $imageFile], 419);
+                return Response::json([
+                    self::STATUS_CODE => 419,
+                    self::STATUS_MSG => "file upload error",
+                    self::DATA => $imageFile
+                ], 419);
             }
 //            $image = new Image($request->all());
 
@@ -202,8 +227,66 @@ class SubmissionController extends Controller{
             return json_encode(new stdClass);
         }
         if($candidate){
-            return Response::json($candidate->toArray(), 200);
+            return Response::json([
+                self::STATUS_CODE => 200,
+                self::STATUS_MSG => "success load submission base on candidate",
+                self::DATA => $candidate->toArray()
+            ], 200);
         }
         return json_encode(self::WARNING);
+    }
+
+    public function byCountry(Request $request){
+//        $request->
+        /**
+         * handle for POST
+         */
+        $country_id = $request->get(Submission::COUNTRY_ID);
+        $serialNumber = $request->get(Device::SERIAL_NUMBER);
+        $candidate = Device::with([
+            "candidate.submission" => function ($query) use ($country_id){
+                $query->where(Submission::COUNTRY_ID, $country_id);
+            }
+//"candidate" => function ($query) use ($country_id){
+//    $query->with([
+//        "submission" => function ($query) use ($country_id){
+//            $query->where(Submission::COUNTRY_ID, $country_id);
+//        }
+//    ]);
+//}
+            /**
+             * clouse function $query is actually Relation $hasOne|$hasMany
+             */
+//            "candidate" => function(Relation $hasMany) use ($country_id){
+//                $hasMany->with([
+//                    "submission" => function(Relation $hasMany) use($country_id){
+//                        $query = $hasMany->getQuery();
+//                        $query->where(Submission::COUNTRY_ID, $country_id);
+////                        dd($query);
+//                    }
+//                ]);
+//            }
+        ])->where(Device::SERIAL_NUMBER, $serialNumber)->first();
+
+        if(!$candidate){
+//            return json_encode(new stdClass);
+            return Response::json([
+                self::STATUS_CODE => 424,
+                self::STATUS_MSG => "no submission base on candidate and country"
+            ]);
+        }
+
+        if($candidate){
+            return Response::json([
+                self::STATUS_CODE => 200,
+                self::STATUS_MSG => "success load submission by candidate and country",
+                self::DATA => $candidate->toArray()
+            ], 200);
+        }
+//        return json_encode(self::WARNING);
+        return Response::json([
+            self::STATUS_CODE => 200,
+            self::STATUS_MSG => self::WARNING
+        ]);
     }
 }
