@@ -1,0 +1,631 @@
+{
+	"id": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+	"name": "fish-co",
+	"description": "",
+	"order": [
+		"49f38652-acdb-797c-906d-d90a12f85b71",
+		"53e3f454-37a2-f967-a8ce-e9c734bf6f84",
+		"a861eac8-6ab8-262f-d88d-562ce040aa3d",
+		"62043b31-1d42-3e05-bdbb-08d27f16c304",
+		"d56e1e7e-e8d5-46b4-488d-9580d55a371e",
+		"1ba1fa04-bbec-12e6-c6a4-6a17444893ad",
+		"51076ca2-b7de-4e20-12ac-b633dd9e8f5a",
+		"2cd408e9-454b-6d6b-2e46-5506cd5f0329",
+		"0e52f3da-3bf7-6247-da75-deddae06870f",
+		"16d51433-d6fb-ccd1-2129-cf11cd469307",
+		"ef279314-dcfa-d321-8c57-c0d84ec4997a",
+		"058a27e9-c434-aa2a-07ef-38770f412537",
+		"6f138852-80c7-837b-5743-4789c4c26c23",
+		"f7f3df41-4d98-e5d8-1812-f165b33fc2e8",
+		"24857a2c-e3f2-ec88-9243-fd521586a705"
+	],
+	"folders": [],
+	"timestamp": 1466381620990,
+	"owner": "110008",
+	"public": false,
+	"hasRequests": true,
+	"requests": [
+		{
+			"id": "058a27e9-c434-aa2a-07ef-38770f412537",
+			"headers": "",
+			"url": "http://localhost:8000/submission/create",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"data": [
+				{
+					"key": "contact_number",
+					"value": "635.790.3827 x46024",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "serial_number",
+					"value": "00:6B:C5:7A:AF:5X",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "caption",
+					"value": "new device",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country_id",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "lehoanganh25991@gmail.com",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Anh Le Hoang",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "submission_image",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "_token",
+					"value": "e85e1b0dac39fb49fa8b94aa11d2e0ec",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"name": "submission-create, with token",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1466398770833,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "0e52f3da-3bf7-6247-da75-deddae06870f",
+			"headers": "",
+			"url": "http://localhost:8000/submission/country",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "serial_number",
+					"value": "A2:62:E3:7F:32:58",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country_id",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466399031258,
+			"name": "submission-country, base on candidate&country",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "16d51433-d6fb-ccd1-2129-cf11cd469307",
+			"headers": "",
+			"url": "http://localhost:8000/token",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": [
+				{
+					"key": "contact_number",
+					"value": "635.790.3827 x46024",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "serial_number",
+					"value": "00:6B:C5:7A:AF:5X",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "caption",
+					"value": "new device",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country_id",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "lehoanganh25991@gmail.com",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Anh Le Hoang",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "submission_image",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "_token",
+					"value": "4c32b76f4a5ee096481a9fc847e81c64",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466398266150,
+			"name": "token",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "1ba1fa04-bbec-12e6-c6a4-6a17444893ad",
+			"headers": "",
+			"url": "http://localhost:8000/submission/create",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "contact_number",
+					"value": "635.790.3827 x46024",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "serial_number",
+					"value": "00:6B:C5:7A:AF:5G",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "caption",
+					"value": "new device",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country_id",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "lehoanganh25991@gmail.com",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Anh Le Hoang",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "submission_image",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466390620323,
+			"name": "submission-create, check type @@",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "24857a2c-e3f2-ec88-9243-fd521586a705",
+			"headers": "",
+			"url": "http://localhost:8000/campaign/index",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"data": [],
+			"dataMode": "urlencoded",
+			"name": "campaign-index",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1466400091253,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "2cd408e9-454b-6d6b-2e46-5506cd5f0329",
+			"headers": "",
+			"url": "http://localhost:8000/submission/index",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"data": [
+				{
+					"key": "serial_number",
+					"value": "WR:ON:G_:SE:RI:AL",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"name": "submission-index, WRONG serial",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1466388753814,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "49f38652-acdb-797c-906d-d90a12f85b71",
+			"headers": "",
+			"url": "http://localhost:8000/candidate/verify",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "serial_number",
+					"value": "28:16:DE:18:02:AE",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466382744566,
+			"name": "verify-candidate",
+			"description": "base on device, check if old|new candidate\n>submission input filled: name, email, contact_number,...",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "51076ca2-b7de-4e20-12ac-b633dd9e8f5a",
+			"headers": "",
+			"url": "http://localhost:8000/submission/index",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"data": [
+				{
+					"key": "serial_number",
+					"value": "44:6C:BB:27:EE:37",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"name": "submission-index",
+			"description": "get submission from some one \ndevice > candidate > submission",
+			"descriptionFormat": "html",
+			"time": 1466388665688,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "53e3f454-37a2-f967-a8ce-e9c734bf6f84",
+			"headers": "",
+			"url": "http://localhost:8000/candidate/verify",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "abc",
+					"value": "def",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466382754006,
+			"name": "verify-candidate-!200",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "62043b31-1d42-3e05-bdbb-08d27f16c304",
+			"headers": "",
+			"url": "http://localhost:8000/submission/create",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "contact_number",
+					"value": "635.790.3827 x46024",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "serial_number",
+					"value": "00:6B:C5:7A:AF:51",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "caption",
+					"value": "borrow phone",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country_id",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "lehoanganh25991@gmail.com",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Anh Le Hoang",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "submission_image",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466382798502,
+			"name": "submission-create, borrow-phone",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "6f138852-80c7-837b-5743-4789c4c26c23",
+			"headers": "",
+			"url": "http://localhost:8000/store/index",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"data": [],
+			"dataMode": "urlencoded",
+			"name": "store-index",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1466400042954,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "a861eac8-6ab8-262f-d88d-562ce040aa3d",
+			"headers": "",
+			"url": "http://localhost:8000/submission/create",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466382783534,
+			"name": "submission-create, image|contact number: required",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "d56e1e7e-e8d5-46b4-488d-9580d55a371e",
+			"headers": "",
+			"url": "http://localhost:8000/submission/create",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "contact_number",
+					"value": "635.790.3827 x46024",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "serial_number",
+					"value": "00:6B:C5:7A:AF:5X",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "caption",
+					"value": "new device",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country_id",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "lehoanganh25991@gmail.com",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Anh Le Hoang",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "submission_image",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466395341967,
+			"name": "submission-create, new device",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "ef279314-dcfa-d321-8c57-c0d84ec4997a",
+			"headers": "",
+			"url": "http://localhost:8000/token/test/5bd89e19c86415dfb455ef09b6cf3f81",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": [
+				{
+					"key": "contact_number",
+					"value": "635.790.3827 x46024",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "serial_number",
+					"value": "00:6B:C5:7A:AF:5X",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "caption",
+					"value": "new device",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country_id",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "lehoanganh25991@gmail.com",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Anh Le Hoang",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "submission_image",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "_token",
+					"value": "4c32b76f4a5ee096481a9fc847e81c64",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466401099426,
+			"name": "token-test",
+			"description": "",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"responses": []
+		},
+		{
+			"id": "f7f3df41-4d98-e5d8-1812-f165b33fc2e8",
+			"headers": "",
+			"url": "http://localhost:8000/store/3",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "a4eaa3d7-2a4b-d71b-2543-8664e1136ba2",
+			"data": [],
+			"dataMode": "urlencoded",
+			"name": "store-country",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1466400063769,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	]
+}
