@@ -31,10 +31,12 @@ Route::post("token", "TokenController@get");
 Route::get("token/test/{md5Hash}", "TokenController@testToken");
 
 Route::post("candidate/verify", "CandidateController@verify");
+
+Route::post("image/index", "ImageController@index");
 /**
  * protected API
  */
-Route::group(['middleware' => "token"], function () {
+Route::group(['middleware' => "token"], function (){
     Route::post("submission/create", "SubmissionController@create");
 //Route::get("submission/create", "SubmissionController@create");
     Route::post("submission/index", "SubmissionController@index");

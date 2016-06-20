@@ -22,7 +22,7 @@ class ApiToken{
     public function handle($request, Closure $next){
         $validator = Validator::make($request->all(), [
             "_token" => "required|token"
-        ]);
+        ]); 
         if($validator->fails()){
             return Response::json([
                 self::STATUS_CODE => 434,

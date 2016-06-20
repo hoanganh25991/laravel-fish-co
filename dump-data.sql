@@ -9,13 +9,38 @@
 /*!40101 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
--- Dumping data for table fish_go.campaign: ~1 rows (approximately)
+
+-- Dumping structure for table fish_go_2.campaign
+CREATE TABLE IF NOT EXISTS `campaign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `des` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `pdf_url` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.campaign: ~0 rows (approximately)
 /*!40000 ALTER TABLE `campaign` DISABLE KEYS */;
 INSERT INTO `campaign` (`id`, `created_at`, `updated_at`, `title`, `des`, `pdf_url`) VALUES
 	(1, '2016-06-19 09:45:19', '2016-06-19 09:45:19', 'Facere mollitia ratione in soluta perspiciatis et.', 'Laborum eos ut corporis at in aliquam. Iste delectus accusantium autem molestiae voluptatem tempora rerum. Nam voluptatum quibusdam temporibus illum.', '');
 /*!40000 ALTER TABLE `campaign` ENABLE KEYS */;
 
--- Dumping data for table fish_go.candidate: ~20 rows (approximately)
+
+-- Dumping structure for table fish_go_2.candidate
+CREATE TABLE IF NOT EXISTS `candidate` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `contact_number` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `candidate_contact_number_unique` (`contact_number`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.candidate: ~20 rows (approximately)
 /*!40000 ALTER TABLE `candidate` DISABLE KEYS */;
 INSERT INTO `candidate` (`id`, `created_at`, `updated_at`, `name`, `email`, `contact_number`) VALUES
 	(6, '2016-06-19 07:21:02', '2016-06-19 07:21:02', 'Gloria Hettinger', 'mosciski.cornell@example.net', '594-806-2070'),
@@ -40,11 +65,37 @@ INSERT INTO `candidate` (`id`, `created_at`, `updated_at`, `name`, `email`, `con
 	(25, '2016-06-19 07:21:02', '2016-06-19 07:21:02', 'Burdette Lemke V', 'cleora.schowalter@example.com', '(985) 268-8576 x5472');
 /*!40000 ALTER TABLE `candidate` ENABLE KEYS */;
 
--- Dumping data for table fish_go.candidate_device: ~0 rows (approximately)
+
+-- Dumping structure for table fish_go_2.candidate_device
+CREATE TABLE IF NOT EXISTS `candidate_device` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `candidate_id` int(10) unsigned NOT NULL,
+  `device_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `candidate_device_candidate_id_foreign` (`candidate_id`),
+  KEY `candidate_device_device_id_foreign` (`device_id`),
+  CONSTRAINT `candidate_device_candidate_id_foreign` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`id`),
+  CONSTRAINT `candidate_device_device_id_foreign` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.candidate_device: ~0 rows (approximately)
 /*!40000 ALTER TABLE `candidate_device` DISABLE KEYS */;
 /*!40000 ALTER TABLE `candidate_device` ENABLE KEYS */;
 
--- Dumping data for table fish_go.country: ~5 rows (approximately)
+
+-- Dumping structure for table fish_go_2.country
+CREATE TABLE IF NOT EXISTS `country` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `country_name_unique` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.country: ~5 rows (approximately)
 /*!40000 ALTER TABLE `country` DISABLE KEYS */;
 INSERT INTO `country` (`id`, `created_at`, `updated_at`, `name`) VALUES
 	(1, '2016-06-19 07:21:02', '2016-06-19 07:21:02', 'Singapore'),
@@ -54,7 +105,22 @@ INSERT INTO `country` (`id`, `created_at`, `updated_at`, `name`) VALUES
 	(5, '2016-06-19 07:21:02', '2016-06-19 07:21:02', 'India');
 /*!40000 ALTER TABLE `country` ENABLE KEYS */;
 
--- Dumping data for table fish_go.device: ~32 rows (approximately)
+
+-- Dumping structure for table fish_go_2.device
+CREATE TABLE IF NOT EXISTS `device` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `serial_number` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `des` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `candidate_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `device_serial_number_unique` (`serial_number`),
+  KEY `device_candidate_id_foreign` (`candidate_id`),
+  CONSTRAINT `device_candidate_id_foreign` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.device: ~32 rows (approximately)
 /*!40000 ALTER TABLE `device` DISABLE KEYS */;
 INSERT INTO `device` (`id`, `created_at`, `updated_at`, `serial_number`, `des`, `candidate_id`) VALUES
 	(91, '2016-06-19 07:28:05', '2016-06-19 07:28:05', 'F9:32:28:15:88:13', 'Cumque et voluptatem tempore voluptate.', 14),
@@ -91,34 +157,74 @@ INSERT INTO `device` (`id`, `created_at`, `updated_at`, `serial_number`, `des`, 
 	(124, '2016-06-20 00:27:30', '2016-06-20 00:27:30', '00:6B:C5:7A:AF:5G', 'Eos odio perferendis hic suscipit aut officia neque illo.', 15);
 /*!40000 ALTER TABLE `device` ENABLE KEYS */;
 
--- Dumping data for table fish_go.image: ~19 rows (approximately)
+
+-- Dumping structure for table fish_go_2.image
+CREATE TABLE IF NOT EXISTS `image` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `style` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'origin',
+  `size` int(10) unsigned NOT NULL,
+  `path` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `caption` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.image: ~20 rows (approximately)
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
-INSERT INTO `image` (`id`, `name`, `type`, `style`, `path`, `caption`, `created_at`, `updated_at`, `size`) VALUES
-	(6, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\4aa469cbc5e9a2d795cf1e595bb00e49.jpg', 'buc anhdep', '2016-06-19 18:13:59', '2016-06-19 18:13:59', 0),
-	(7, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087.jpg', 'new device', '2016-06-20 00:24:03', '2016-06-20 00:24:03', 0),
-	(8, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_0.jpg', 'new device', '2016-06-20 00:28:07', '2016-06-20 00:28:07', 0),
-	(9, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_1.jpg', 'new device', '2016-06-20 00:33:22', '2016-06-20 00:33:22', 0),
-	(10, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_2.jpg', 'new device', '2016-06-20 00:34:20', '2016-06-20 00:34:20', 0),
-	(11, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_3.jpg', 'new device', '2016-06-20 00:34:21', '2016-06-20 00:34:21', 0),
-	(12, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_4.jpg', 'new device', '2016-06-20 00:34:23', '2016-06-20 00:34:23', 0),
-	(13, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_5.jpg', 'new device', '2016-06-20 00:34:24', '2016-06-20 00:34:24', 0),
-	(14, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_6.jpg', 'new device', '2016-06-20 00:34:25', '2016-06-20 00:34:25', 0),
-	(15, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_7.jpg', 'new device', '2016-06-20 00:34:25', '2016-06-20 00:34:25', 0),
-	(16, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_8.jpg', 'new device', '2016-06-20 00:34:26', '2016-06-20 00:34:26', 0),
-	(17, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_9.jpg', 'new device', '2016-06-20 01:47:26', '2016-06-20 01:47:26', 0),
-	(18, '', 'image/png', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\ba06ebb8a558e2ae3c72431d6dabe4c9.png', 'new device', '2016-06-20 02:42:58', '2016-06-20 02:42:58', 9308),
-	(19, '', 'application/octet-stream', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\900150983cd24fb0d6963f7d28e17f72.abc', 'new device', '2016-06-20 02:44:43', '2016-06-20 02:44:43', 12997),
-	(20, '', 'image/png', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3.png', 'new device', '2016-06-20 02:59:29', '2016-06-20 02:59:29', 2762),
-	(21, '', 'image/png', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_0.png', 'new device', '2016-06-20 03:17:59', '2016-06-20 03:17:59', 2762),
-	(22, '', 'image/jpeg', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_10.jpg', 'new device', '2016-06-20 03:18:23', '2016-06-20 03:18:23', 5106),
-	(23, '', 'image/png', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_1.png', 'new device', '2016-06-20 04:59:37', '2016-06-20 04:59:37', 2762),
-	(24, '', 'image/png', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_2.png', 'new device', '2016-06-20 05:17:16', '2016-06-20 05:17:16', 2762),
-	(25, '', 'image/png', 'origin', 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_3.png', 'new device', '2016-06-20 05:18:15', '2016-06-20 05:18:15', 2762);
+INSERT INTO `image` (`id`, `name`, `type`, `style`, `size`, `path`, `caption`, `created_at`, `updated_at`) VALUES
+	(6, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\4aa469cbc5e9a2d795cf1e595bb00e49.jpg', 'buc anhdep', '2016-06-19 18:13:59', '2016-06-19 18:13:59'),
+	(7, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087.jpg', 'new device', '2016-06-20 00:24:03', '2016-06-20 00:24:03'),
+	(8, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_0.jpg', 'new device', '2016-06-20 00:28:07', '2016-06-20 00:28:07'),
+	(9, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_1.jpg', 'new device', '2016-06-20 00:33:22', '2016-06-20 00:33:22'),
+	(10, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_2.jpg', 'new device', '2016-06-20 00:34:20', '2016-06-20 00:34:20'),
+	(11, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_3.jpg', 'new device', '2016-06-20 00:34:21', '2016-06-20 00:34:21'),
+	(12, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_4.jpg', 'new device', '2016-06-20 00:34:23', '2016-06-20 00:34:23'),
+	(13, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_5.jpg', 'new device', '2016-06-20 00:34:24', '2016-06-20 00:34:24'),
+	(14, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_6.jpg', 'new device', '2016-06-20 00:34:25', '2016-06-20 00:34:25'),
+	(15, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_7.jpg', 'new device', '2016-06-20 00:34:25', '2016-06-20 00:34:25'),
+	(16, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_8.jpg', 'new device', '2016-06-20 00:34:26', '2016-06-20 00:34:26'),
+	(17, '', 'image/jpeg', 'origin', 0, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_9.jpg', 'new device', '2016-06-20 01:47:26', '2016-06-20 01:47:26'),
+	(18, '', 'image/png', 'origin', 9308, 'D:\\work-station\\laravel-fish-go\\public\\upload\\ba06ebb8a558e2ae3c72431d6dabe4c9.png', 'new device', '2016-06-20 02:42:58', '2016-06-20 02:42:58'),
+	(19, '', 'application/octet-stream', 'origin', 12997, 'D:\\work-station\\laravel-fish-go\\public\\upload\\900150983cd24fb0d6963f7d28e17f72.abc', 'new device', '2016-06-20 02:44:43', '2016-06-20 02:44:43'),
+	(20, '', 'image/png', 'origin', 2762, 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3.png', 'new device', '2016-06-20 02:59:29', '2016-06-20 02:59:29'),
+	(21, '', 'image/png', 'origin', 2762, 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_0.png', 'new device', '2016-06-20 03:17:59', '2016-06-20 03:17:59'),
+	(22, '', 'image/jpeg', 'origin', 5106, 'D:\\work-station\\laravel-fish-go\\public\\upload\\d107afdc29546e66156381a513024087_10.jpg', 'new device', '2016-06-20 03:18:23', '2016-06-20 03:18:23'),
+	(23, '', 'image/png', 'origin', 2762, 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_1.png', 'new device', '2016-06-20 04:59:37', '2016-06-20 04:59:37'),
+	(24, '', 'image/png', 'origin', 2762, 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_2.png', 'new device', '2016-06-20 05:17:16', '2016-06-20 05:17:16'),
+	(25, '', 'image/png', 'origin', 2762, 'D:\\work-station\\laravel-fish-go\\public\\upload\\b85f321d418961c83ec511ce303e58e3_3.png', 'new device', '2016-06-20 05:18:15', '2016-06-20 05:18:15');
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 
--- Dumping data for table fish_go.migrations: ~18 rows (approximately)
+
+-- Dumping structure for table fish_go_2.migrations
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `migration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.migrations: ~36 rows (approximately)
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
 INSERT INTO `migrations` (`migration`, `batch`) VALUES
+	('2016_06_19_042641_create_table_candidate', 1),
+	('2016_06_19_051036_create_table_submission', 1),
+	('2016_06_19_051733_create_table_country', 1),
+	('2016_06_19_052557_create_table_store', 1),
+	('2016_06_19_061539_alter_table_submission_foreignkey_on_candidate', 1),
+	('2016_06_19_063142_create_table_device', 1),
+	('2016_06_19_063540_create_pivot_table_candidate_device', 1),
+	('2016_06_19_065301_alter_table_device_foreignkey_on_candidate', 1),
+	('2016_06_19_093859_create_table_campaign', 1),
+	('2016_06_19_120444_create_table_image', 1),
+	('2016_06_19_120920_alter_table_submission_drop_column_image_url', 1),
+	('2016_06_19_122749_create_pivot_submission_image', 1),
+	('2016_06_19_155453_alter_table_submission_drop_column_caption', 1),
+	('2016_06_19_155614_alter_table_image_add_column_caption', 1),
+	('2016_06_19_170736_alter_table_image_drop_unique_name', 1),
+	('2016_06_19_180333_alter_table_image_add_column_created_updated_at', 1),
+	('2016_06_19_180754_alter_pivot_submission_image_add_column_created_updated_at', 1),
+	('2016_06_20_015228_alter_table_image_change_column_size_type', 1),
 	('2016_06_19_042641_create_table_candidate', 1),
 	('2016_06_19_051036_create_table_submission', 2),
 	('2016_06_19_051733_create_table_country', 3),
@@ -139,7 +245,23 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 	('2016_06_20_015228_alter_table_image_change_column_size_type', 15);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 
--- Dumping data for table fish_go.store: ~65 rows (approximately)
+
+-- Dumping structure for table fish_go_2.store
+CREATE TABLE IF NOT EXISTS `store` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `tel` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `country_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `store_address_unique` (`address`),
+  KEY `store_country_id_foreign` (`country_id`),
+  CONSTRAINT `store_country_id_foreign` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.store: ~65 rows (approximately)
 /*!40000 ALTER TABLE `store` DISABLE KEYS */;
 INSERT INTO `store` (`id`, `created_at`, `updated_at`, `name`, `address`, `tel`, `country_id`) VALUES
 	(1, '2016-06-19 07:24:27', '2016-06-19 07:24:27', 'Dr. Trevor Daugherty', '4304 Richie Spur Apt. 393\nWilliamsonberg, NJ 50013', '429.561.1705', 5),
@@ -209,7 +331,22 @@ INSERT INTO `store` (`id`, `created_at`, `updated_at`, `name`, `address`, `tel`,
 	(65, '2016-06-19 07:24:27', '2016-06-19 07:24:27', 'Guido Becker', '88072 Miller Harbors\nPort Emanuelport, SD 29594', '(465) 533-9000 x194', 1);
 /*!40000 ALTER TABLE `store` ENABLE KEYS */;
 
--- Dumping data for table fish_go.submission: ~119 rows (approximately)
+
+-- Dumping structure for table fish_go_2.submission
+CREATE TABLE IF NOT EXISTS `submission` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `country_id` int(10) unsigned NOT NULL,
+  `candidate_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `submission_candidate_id_foreign` (`candidate_id`),
+  KEY `submission_country_id_foreign` (`country_id`),
+  CONSTRAINT `submission_candidate_id_foreign` FOREIGN KEY (`candidate_id`) REFERENCES `candidate` (`id`),
+  CONSTRAINT `submission_country_id_foreign` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.submission: ~120 rows (approximately)
 /*!40000 ALTER TABLE `submission` DISABLE KEYS */;
 INSERT INTO `submission` (`id`, `created_at`, `updated_at`, `country_id`, `candidate_id`) VALUES
 	(1, '2016-06-19 07:24:27', '2016-06-19 07:24:27', 4, 6),
@@ -334,7 +471,22 @@ INSERT INTO `submission` (`id`, `created_at`, `updated_at`, `country_id`, `candi
 	(123, '2016-06-20 05:18:15', '2016-06-20 05:18:15', 1, 15);
 /*!40000 ALTER TABLE `submission` ENABLE KEYS */;
 
--- Dumping data for table fish_go.submission_image: ~19 rows (approximately)
+
+-- Dumping structure for table fish_go_2.submission_image
+CREATE TABLE IF NOT EXISTS `submission_image` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `submission_id` int(10) unsigned NOT NULL,
+  `image_id` int(10) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `submission_image_submission_id_foreign` (`submission_id`),
+  KEY `submission_image_image_id_foreign` (`image_id`),
+  CONSTRAINT `submission_image_image_id_foreign` FOREIGN KEY (`image_id`) REFERENCES `image` (`id`),
+  CONSTRAINT `submission_image_submission_id_foreign` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table fish_go_2.submission_image: ~20 rows (approximately)
 /*!40000 ALTER TABLE `submission_image` DISABLE KEYS */;
 INSERT INTO `submission_image` (`id`, `submission_id`, `image_id`, `created_at`, `updated_at`) VALUES
 	(2, 104, 6, '2016-06-19 18:13:59', '2016-06-19 18:13:59'),

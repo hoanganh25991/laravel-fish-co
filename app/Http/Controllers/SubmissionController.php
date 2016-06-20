@@ -165,7 +165,14 @@ class SubmissionController extends Controller{
                     if($tmpFileMoved){
                         $image->fill($request->all());
                         $image->fill($imageFile);
-                        $image->path = $imagePath;
+                        /**
+                         * path not show where image is, just the
+                         * file name
+                         * when get out Image from database
+                         * api give device truth link
+                         */
+//                        $image->path = $imagePath;
+                        $image->path = $fileNameWithExt;
                         $image->save();
 
                         $submission = new Submission($request->all());

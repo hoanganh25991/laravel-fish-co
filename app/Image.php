@@ -54,4 +54,15 @@ class Image extends BaseModel{
         }
         return true;
     }
+
+    public function getPathAttribute(){
+        /**
+         * instead of return $this->attributes["path"]
+         * return full linkt for device
+         * >hostname + /upload/ + filename
+         */
+        $relativeLink = env("UPLOAD_DIRECTORY") . "/" . $this->attributes["path"];
+        $realLink = asset($relativeLink);
+        return $realLink;
+    }
 }

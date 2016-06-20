@@ -22,8 +22,9 @@ class AlterTableSubmissionForeignkeyOnCandidate extends Migration{
     }
 
     /**
-     * Reverse the migrations.
-     *
+     * Reverse the migrations.,M
+     * LB98
+     *  vbnmcvp[poiutaTOIUYREWQ 8765
      * @return void
      */
     public function down(){
