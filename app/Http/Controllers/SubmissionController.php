@@ -182,6 +182,7 @@ class SubmissionController extends Controller{
                         return Response::json([
                             self::STATUS_CODE => 200,
                             self::STATUS_MSG => "success create submission",
+                            self::DATA => ""
                         ]);
                     }else{
                         /**
@@ -247,32 +248,33 @@ class SubmissionController extends Controller{
             "candidate.submission" => function ($query) use ($country_id){
                 $query->where(Submission::COUNTRY_ID, $country_id);
             }
-//"candidate" => function ($query) use ($country_id){
-//    $query->with([
-//        "submission" => function ($query) use ($country_id){
-//            $query->where(Submission::COUNTRY_ID, $country_id);
-//        }
-//    ]);
-//}
+            //"candidate" => function ($query) use ($country_id){
+            //    $query->with([
+            //        "submission" => function ($query) use ($country_id){
+            //            $query->where(Submission::COUNTRY_ID, $country_id);
+            //        }
+            //    ]);
+            //}
             /**
              * clouse function $query is actually Relation $hasOne|$hasMany
              */
-//            "candidate" => function(Relation $hasMany) use ($country_id){
-//                $hasMany->with([
-//                    "submission" => function(Relation $hasMany) use($country_id){
-//                        $query = $hasMany->getQuery();
-//                        $query->where(Submission::COUNTRY_ID, $country_id);
-////                        dd($query);
-//                    }
-//                ]);
-//            }
+            //            "candidate" => function(Relation $hasMany) use ($country_id){
+            //                $hasMany->with([
+            //                    "submission" => function(Relation $hasMany) use($country_id){
+            //                        $query = $hasMany->getQuery();
+            //                        $query->where(Submission::COUNTRY_ID, $country_id);
+            ////                        dd($query);
+            //                    }
+            //                ]);
+            //            }
         ])->where(Device::SERIAL_NUMBER, $serialNumber)->first();
 
         if(!$candidate){
 //            return json_encode(new stdClass);
             return Response::json([
                 self::STATUS_CODE => 424,
-                self::STATUS_MSG => "no submission base on candidate and country"
+                self::STATUS_MSG => "no submission found base on candidate and country",
+                self::DATA => $request->all()
             ]);
         }
 
@@ -286,7 +288,8 @@ class SubmissionController extends Controller{
 //        return json_encode(self::WARNING);
         return Response::json([
             self::STATUS_CODE => 200,
-            self::STATUS_MSG => self::WARNING
+            self::STATUS_MSG => self::WARNING,
+            self::DATA => $request->all()
         ]);
     }
 }

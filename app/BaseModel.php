@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class BaseModel extends Model{
     use ModelForeignKey;
     use ModelIndex;
-    
+
 //    /**
 //     * @param string $column column name
 //     * @return string
