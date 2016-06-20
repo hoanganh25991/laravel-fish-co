@@ -223,7 +223,12 @@ class SubmissionController extends Controller{
          */
         $candidate = Device::with("candidate.submission")->where(Device::SERIAL_NUMBER, $serialNumber)->first();
         if(!$candidate){
-            return json_encode(new stdClass);
+//            return json_encode(new stdClass);
+            return Response::json([
+                self::STATUS_CODE => 456,
+                self::STATUS_MSG => "can not find candidate base on device.serial_number",
+                self::DATA => $request->all()
+            ]);
         }
         if($candidate){
             return Response::json([
@@ -232,7 +237,12 @@ class SubmissionController extends Controller{
                 self::DATA => $candidate->toArray()
             ], 200);
         }
-        return json_encode(self::WARNING);
+//        return json_encode(self::WARNING);
+        return Response::json([
+            self::STATUS_CODE => 200,
+            self::STATUS_MSG => self::WARNING,
+            self::DATA => $request->all()
+        ]);
     }
 
     public function byCountry(Request $request){
