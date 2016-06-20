@@ -1,27 +1,42 @@
-# Laravel PHP Framework
+#fish & co
+fish & co, framework [laravel](https://laravel.com/)
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+read API at __app\routes.php__ file
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+you can use __Postman__ to check
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+	#if you have `Postman`, you can run test api
+	#after complete below steps
 
-## Official Documentation
+	#at root folder
+	api-test-postman.html
+	#click to run & enjoy ^^
+##composer
+to load dependencies of project, after clone, run command
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+	composer install
+##.env
+at root project, base on .env.example, create .env file
 
-## Contributing
+	#some important infomation need provided
+	DB_HOST=127.0.0.1
+	DB_PORT=3306
+	DB_DATABASE=fish_go
+	DB_USERNAME=root
+	DB_PASSWORD=ifrc
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+	UPLOAD_FOLDER=D:\work-station\laravel-fish-go\public\upload
+	FISH_CO_KEY=whalefishcomeco
+##run migration to create database
+at root project, run command
 
-## Security Vulnerabilities
+	php artisan migrate
+##dump data
+at root project, import data from `dump-data.sql`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+##run
+at root project, run command
 
-## License
+	php artisan serve
+	#project in running up on localhost:8000
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
