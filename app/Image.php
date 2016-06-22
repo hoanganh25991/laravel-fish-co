@@ -61,7 +61,8 @@ class Image extends BaseModel{
          * return full linkt for device
          * >hostname + /upload/ + filename
          */
-        $relativeLink = env("UPLOAD_DIRECTORY") . "/" . $this->attributes["path"];
+        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "upload";
+        $relativeLink = $uploadFoler . "/" . $this->attributes["path"];
         $realLink = asset($relativeLink);
         return $realLink;
     }
