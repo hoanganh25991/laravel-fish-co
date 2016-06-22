@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 
 Route::get("register","RegisterController@index");
 Route::post("register", "RegisterController@index");
+
 Route::get("campaigns", "CampaignController@index");
 Route::get("outlets", "OutletController@index");
 Route::post("submissions", "SubmissionController@index");

@@ -27,8 +27,9 @@ class SubmissionController extends Controller{
     public function create(Request $request){
         /** validate */
         $validator = Validator::make($request->all(), [
-            "image" => "bail|required",
             "contact_number" => "bail|required",
+            "uuid" => "required",
+            "image" => "bail|required",
         ]);
 
 
@@ -206,8 +207,18 @@ class SubmissionController extends Controller{
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request){
+        /** validate on required field for api to response */
+        $validator = Validator::make($request->all(), [
+            "uuid" => "required",
+            "page" => "required"
+        ]);
+        
+        if($validator->fails()){
+            return $this->res($validator->getMessageBag()->toArray(), "", 422);
+        }
+        
         $uuid = $request->get("uuid");
-        $page = $request->get("page")? $request->get("page") : 1;
+        $page = $request->get("page");
         $device = Device::with([
             "candidate" => function ($relation) use ($page){
                 $relation->with([
