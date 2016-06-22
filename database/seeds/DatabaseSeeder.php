@@ -20,12 +20,15 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
         Model::unguard();
-//        factory(Candidate::class, 20)->create();
+//        factory(Candidate::class, 10)->create();
 //        factory(Country::class, 5)->create();
-//        factory(Device::class, 30)->create();
+//        factory("App\\Region", 8)->create();
+        factory("App\\Outlet", 23)->create();
+//        factory(Device::class, 15)->create();
+//        factory("App\\Image", 16)->create();
 //        factory(Store::class, 65)->create();
-//        factory(Submission::class, 100)->create();
-        factory(Campaign::class, 1)->create();
+//        factory(Submission::class, 16)->create();
+//        factory(Campaign::class, 1)->create();
         Model::reguard();
     }
 }

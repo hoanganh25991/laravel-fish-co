@@ -18,11 +18,11 @@ class CandidateController extends Controller{
     }
 
     public function verify(Request $request){
-        $serialNumber = $request->get(Device::SERIAL_NUMBER);
-        $device = Device::with("candidate")->where(Device::SERIAL_NUMBER, $serialNumber)->first();
+        $uuid = $request->get("uuid");
+        $device = Device::with("candidate")->where("uuid", $uuid)->first();
+        
         if($device){
             $candidate = $device->candidate;
-//            return $candidate->toJson();
             return Response::json([
                 self::STATUS_CODE => 200,
                 self::STATUS_MSG => "success find candidate base on device",
@@ -35,7 +35,7 @@ class CandidateController extends Controller{
             return Response::json([
                 self::STATUS_CODE => 418,
                 self::STATUS_MSG => "no candidate found base on device",
-                self::DATA => $serialNumber
+                self::DATA => $uuid
             ]);
         }
 //        return json_encode(self::WARNING);

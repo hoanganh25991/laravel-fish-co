@@ -11,6 +11,8 @@
 |
 */
 /** @var Factory $factory */
+use App\Image;
+use App\Region;
 use Faker\Generator as Faker;
 use App\Campaign;
 use Illuminate\Database\Eloquent\Factory;
@@ -45,34 +47,73 @@ $factory->define(Device::class, function (Faker $faker){
     $candidateIdArray = Candidate::lists(Candidate::ID)->toArray();
 //    dd($candidateIdArray);
     return [
-        Device::SERIAL_NUMBER => $faker->unique()->macAddress,
-        Device::DES => $faker->sentences(1, true),
+        Device::UUID => $faker->unique()->uuid,
+        Device::DESCRIPTION => $faker->sentences(1, true),
         Device::CANDIDATE_ID => $faker->randomElement($candidateIdArray)
     ];
 });
 
-$factory->define(Store::class, function (Faker $faker){
+$factory->define("App\\Region", function (Faker $f){
     $countryIdArray = Country::lists(Country::ID)->toArray();
     return [
-        Store::NAME => $faker->name,
-        Store::ADDRESS => $faker->address,
-        Store::TEL => $faker->phoneNumber,
-        Store::COUNTRY_ID => $faker->randomElement($countryIdArray)
+        "name" => $f->streetName,
+        "country_id" => $f->randomElement($countryIdArray),
+
+        "instagram_url" => $f->imageUrl(),
+        "facebook_url" => $f->imageUrl(),
+        "twitter_url" => $f->imageUrl(),
+        "website_url" => $f->imageUrl(),
+    ];
+});
+
+$factory->define("App\\Outlet", function (Faker $f){
+    $regionIdArray = Region::lists("id")->toArray();
+    return [
+        "name" => $f->userName,
+        "address" => $f->streetName,
+        "region_id" => $f->randomElement($regionIdArray),
+
+        "instagram_url" => $f->imageUrl(),
+        "facebook_url" => $f->imageUrl(),
+        "twitter_url" => $f->imageUrl(),
+        "website_url" => $f->imageUrl(),
+    ];
+});
+
+
+
+//$factory->define(Store::class, function (Faker $faker){
+//    $countryIdArray = Country::lists(Country::ID)->toArray();
+//    return [
+//        Store::NAME => $faker->name,
+//        Store::ADDRESS => $faker->address,
+//        Store::TEL => $faker->phoneNumber,
+//        Store::COUNTRY_ID => $faker->randomElement($countryIdArray)
+//    ];
+//});
+$factory->define("App\\Image", function (Faker $f){
+    return [
+        "name" => $f->sentences(1, true) . ".png",
+        "width" => $f->randomNumber(3),
+        "height" => $f->randomNumber(3),
+        "size" => $f->randomNumber(5),
+        "type" => "image/png",
+        "path" => md5($f->streetAddress).".png"
     ];
 });
 
 $factory->define(Submission::class, function (Faker $faker){
     $candidateIdArray = Candidate::lists(Candidate::ID)->toArray();
     $countryIdArray = Country::lists(Country::ID)->toArray();
+    $imageIdArray = Image::lists("id")->toArray();
     return [
-        Submission::CAPTION => $faker->sentences(1, true),
-        Submission::IMAGE_URL => $faker->imageUrl(),
         Submission::CANDIDATE_ID => $faker->randomElement($candidateIdArray),
         Submission::COUNTRY_ID => $faker->randomElement($countryIdArray),
+        "image_id" => $faker->unique()->randomElement($imageIdArray)
     ];
 });
 
-$factory->define(Campaign::class, function(Faker $faker){
+$factory->define(Campaign::class, function (Faker $faker){
     return [
         Campaign::TITLE => $faker->sentences(1, true),
         Campaign::DES => $faker->paragraphs(1, true),

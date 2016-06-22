@@ -13,46 +13,54 @@
 use App\Device;
 use App\Submission;
 use Illuminate\Http\Request;
-Route::group(['middleware' => "token"], function (){
-    Route::post("api", function(Request $request){
-        $model = $request->get("model");
-        $action = $request->get("action");
-        $capitalName = ucfirst($model);
-        $controller = "App\\Http\\Controllers\\{$capitalName}Controller";
+
+Route::post("register", "RegisterController@index");
+Route::get("campaigns", "CampaignController@index");
+Route::get("outlets", "OutletController@index");
+Route::post("submissions", "SubmissionController@index");
+Route::post("submission", "SubmissionController@create");
+
+
+//Route::group(['middleware' => "token"], function (){
+//    Route::post("api", function(Request $request){
+//        $model = $request->get("model");
+//        $action = $request->get("action");
+//        $capitalName = ucfirst($model);
+//        $controller = "App\\Http\\Controllers\\{$capitalName}Controller";
+////        $r = (new $controller)->$action($request);
+////        return $r;
+//        return (new $controller)->$action($request);
+//    });
+//    Route::post("{controllerName}/{action}", function($controllerName, $action, Request $request){
+//        $capitalName = ucfirst($controllerName);
+//        $controller = "App\\Http\\Controllers\\{$capitalName}Controller";
 //        $r = (new $controller)->$action($request);
 //        return $r;
-        return (new $controller)->$action($request);
-    });
-    Route::post("{controllerName}/{action}", function($controllerName, $action, Request $request){
-        $capitalName = ucfirst($controllerName);
-        $controller = "App\\Http\\Controllers\\{$capitalName}Controller";
-        $r = (new $controller)->$action($request);
-        return $r;
-    });
-});
-
-Route::get('', function (){
-    return view('welcome');
-});
-Route::get("store/index", "StoreController@index");
-Route::post("store/index", "StoreController@index");
-
-Route::get("store/{countryId}", "StoreController@byCountry");
-Route::post("store/{countryId}", "StoreController@byCountry");
-
-Route::get("campaign/index", "CampaignController@index");
-Route::post("campaign/index", "CampaignController@index");
-/**
- * Base on device.serial_number detect new/old candidate
- */
-Route::get("token", "TokenController@get");
-Route::post("token", "TokenController@get");
-
-Route::get("token/test/{md5Hash}", "TokenController@test");
-
-Route::post("candidate/verify", "CandidateController@verify");
-
-Route::post("image/index", "ImageController@index");
+//    });
+//});
+//
+//Route::get('', function (){
+//    return view('welcome');
+//});
+//Route::get("store/index", "StoreController@index");
+//Route::post("store/index", "StoreController@index");
+//
+//Route::get("store/{countryId}", "StoreController@byCountry");
+//Route::post("store/{countryId}", "StoreController@byCountry");
+//
+//Route::get("campaign/index", "CampaignController@index");
+//Route::post("campaign/index", "CampaignController@index");
+///**
+// * Base on device.serial_number detect new/old candidate
+// */
+//Route::get("token", "TokenController@get");
+//Route::post("token", "TokenController@get");
+//
+//Route::get("token/test/{md5Hash}", "TokenController@test");
+//
+//Route::post("candidate/verify", "CandidateController@verify");
+//
+//Route::post("image/index", "ImageController@index");
 
 Route::post("submission/image", function (Request $request){
     $country_id = $request->get(Submission::COUNTRY_ID);
@@ -91,7 +99,7 @@ Route::group(['middleware' => "token"], function (){
     Route::post("submission/create", "SubmissionController@create");
 //Route::get("submission/create", "SubmissionController@create");
     Route::post("submission/index", "SubmissionController@index");
-    Route::post("submission/country", "SubmissionController@country");
+    Route::post("submission/country", "SubmissionController@byCountry");
 
     Route::post("{controllerName}/{action}", function($controllerName, $action, Request $request){
         $capitalName = ucfirst($controllerName);
