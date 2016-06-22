@@ -92,10 +92,9 @@ class SubmissionController extends Controller{
         /** $candidate, $device checked OK */
 
         /** submission with 24-hr */
-        $submission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
-        $submisstionDate = new Carbon($submission->create_at);
+        $latestSubmission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
         $now = new Carbon();
-        if($now->diffInMinutes($submisstionDate) <= 1){
+        if($now->diffInMinutes($latestSubmission->created_at) <= 1){
             return $this->res("", "only one submission in 24 hr", 422);
         }
 
@@ -176,11 +175,11 @@ class SubmissionController extends Controller{
                         $image->height = $height;
                         $image->save();
 
-                        $submission = new Submission();
-                        $submission->country_id = $request->get("country_id");
-                        $submission->candidate_id = $candidate->id;
-                        $submission->image_id = $image->id;
-                        $submission->save();
+                        $latestSubmission = new Submission();
+                        $latestSubmission->country_id = $request->get("country_id");
+                        $latestSubmission->candidate_id = $candidate->id;
+                        $latestSubmission->image_id = $image->id;
+                        $latestSubmission->save();
 
                         return $this->res("", "success create submission");
                     }else{
