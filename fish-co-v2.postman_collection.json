@@ -1,0 +1,115 @@
+{
+	"id": "fb3aa842-c074-157b-5935-ea15befb737f",
+	"name": "fish-co-v2-tinker.io",
+	"description": "",
+	"order": [
+		"f4059067-0058-4145-4356-ee81187c7ed5",
+		"1351f01d-9300-3990-f4a4-2cb48e6bafe9",
+		"d98074df-f3a2-8cbd-99da-76017688c04c",
+		"c5e8df1e-5eff-cc2d-75a4-bf99bcee7ad7"
+	],
+	"folders": [],
+	"timestamp": 1466582131422,
+	"owner": "110008",
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "1351f01d-9300-3990-f4a4-2cb48e6bafe9",
+			"headers": "",
+			"url": "http://128.199.237.219/fish-co-server/campaigns",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "fb3aa842-c074-157b-5935-ea15befb737f",
+			"data": null,
+			"dataMode": "params",
+			"name": "campaigns",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1466582188493,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "c5e8df1e-5eff-cc2d-75a4-bf99bcee7ad7",
+			"headers": "",
+			"url": "http://128.199.237.219/fish-co-server/submissions",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "uuid",
+					"value": "e8cf38b7-6729-3d21-a5cd-f4ca45ed8e46",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "page",
+					"value": "100",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466584070360,
+			"name": "submissions",
+			"description": "",
+			"collectionId": "fb3aa842-c074-157b-5935-ea15befb737f",
+			"responses": []
+		},
+		{
+			"id": "d98074df-f3a2-8cbd-99da-76017688c04c",
+			"headers": "",
+			"url": "http://128.199.237.219/fish-co-server/outlets",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "fb3aa842-c074-157b-5935-ea15befb737f",
+			"data": null,
+			"dataMode": "params",
+			"name": "outlets",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1466582641468,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "f4059067-0058-4145-4356-ee81187c7ed5",
+			"headers": "",
+			"url": "http://128.199.237.219/fish-co-server/register",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "uuid",
+					"value": "e8cf38b7-6729-3d21-a5cd-f4ca45ed8e46",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1466582162501,
+			"name": "register",
+			"description": "",
+			"collectionId": "fb3aa842-c074-157b-5935-ea15befb737f",
+			"responses": []
+		}
+	]
+}

@@ -9,6 +9,7 @@ use App\Image;
 use App\Submission;
 use App\SubmissionImage;
 use App\Traits\ApiResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Response;
 use Validator;
@@ -88,6 +89,15 @@ class SubmissionController extends Controller{
         }
 
         /** $candidate, $device checked OK */
+
+        /** submission with 24-hr */
+        $submission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
+        $submisstionDate = new Carbon($submission->create_at);
+        $now = new Carbon();
+        if($now->diffInMinutes($submisstionDate) <= 1){
+            return $this->res("", "only one submission in 24 hr", 422);
+        }
+
         /** move on to save */
 
         /** check validate */
@@ -215,61 +225,5 @@ class SubmissionController extends Controller{
         }
 
         return $this->res($deviceInfo);
-    }
-
-    public function country(Request $request){
-//        $request->
-        /**
-         * handle for POST
-         */
-        $country_id = $request->get(Submission::COUNTRY_ID);
-        $serialNumber = $request->get(Device::SERIAL_NUMBER);
-        $candidate = Device::with([
-            "candidate.submission" => function ($query) use ($country_id){
-                $query->where(Submission::COUNTRY_ID, $country_id);
-            }
-            //"candidate" => function ($query) use ($country_id){
-            //    $query->with([
-            //        "submission" => function ($query) use ($country_id){
-            //            $query->where(Submission::COUNTRY_ID, $country_id);
-            //        }
-            //    ]);
-            //}
-            /**
-             * clouse function $query is actually Relation $hasOne|$hasMany
-             */
-            //            "candidate" => function(Relation $hasMany) use ($country_id){
-            //                $hasMany->with([
-            //                    "submission" => function(Relation $hasMany) use($country_id){
-            //                        $query = $hasMany->getQuery();
-            //                        $query->where(Submission::COUNTRY_ID, $country_id);
-            ////                        dd($query);
-            //                    }
-            //                ]);
-            //            }
-        ])->where(Device::SERIAL_NUMBER, $serialNumber)->first();
-
-        if(!$candidate){
-//            return json_encode(new stdClass);
-            return Response::json([
-                self::STATUS_CODE => 424,
-                self::STATUS_MSG => "no submission found base on candidate and country",
-                self::DATA => $request->all()
-            ]);
-        }
-
-        if($candidate){
-            return Response::json([
-                self::STATUS_CODE => 200,
-                self::STATUS_MSG => "success load submission by candidate and country",
-                self::DATA => $candidate->toArray()
-            ], 200);
-        }
-//        return json_encode(self::WARNING);
-        return Response::json([
-            self::STATUS_CODE => 200,
-            self::STATUS_MSG => self::WARNING,
-            self::DATA => $request->all()
-        ]);
     }
 }
