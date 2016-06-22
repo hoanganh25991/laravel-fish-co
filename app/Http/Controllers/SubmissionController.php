@@ -251,7 +251,7 @@ class SubmissionController extends Controller{
         ]);
     }
 
-    public function byCountry(Request $request){
+    public function country(Request $request){
 //        $request->
         /**
          * handle for POST

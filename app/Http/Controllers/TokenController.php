@@ -36,7 +36,7 @@ class TokenController extends Controller{
         return true;
     }
 
-    public function testToken($clientToken){
+    public function test($clientToken){
         return [
             "clientToken" => $clientToken,
             "serverToken" => $this->get()
