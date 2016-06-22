@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Campaign;
 use App\Http\Requests;
-use Request;
+use Illuminate\Http\Request;
 use Response;
 
 class CampaignController extends Controller{

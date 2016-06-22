@@ -10,6 +10,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+use App\Device;
+use App\Submission;
+use Illuminate\Http\Request;
 
 Route::get('', function (){
     return view('welcome');
@@ -33,6 +36,37 @@ Route::get("token/test/{md5Hash}", "TokenController@testToken");
 Route::post("candidate/verify", "CandidateController@verify");
 
 Route::post("image/index", "ImageController@index");
+
+Route::post("submission/image", function (Request $request){
+    $country_id = $request->get(Submission::COUNTRY_ID);
+    $serialNumber = $request->get(Device::SERIAL_NUMBER);
+    /** @var \App\BaseModel $candidate */
+    $candidate = Device::with([
+//        "candidate.submission" => function ($relation) use ($country_id){
+//            $relation->with("submissionImage.image");
+//            $relation->where(Submission::COUNTRY_ID, $country_id);
+//        },
+"candidate.submission" => function ($relation) use ($country_id){
+    $relation->with("submissionImage.image")->where(Submission::COUNTRY_ID, $country_id);
+},
+    ])->where(Device::SERIAL_NUMBER, $serialNumber)->first()->candidate;
+    $submission = $candidate->submission;
+    foreach($submission as $s){
+        /** @var Submission $a */
+        $submissionImageArray = $s->submissionImage;
+        $imageArray = [];
+        foreach($submissionImageArray as $sb){
+            $imageArray[] = $sb->image;
+        }
+        /** @var Submission $s */
+        $s->setAttribute("image", $imageArray);
+    }
+    return Response::json([
+        "statusCode" => 200,
+        "statusMsg" => "success load submission by candidate and country",
+        "data" => $submission->toArray()
+    ], 200);
+});
 /**
  * protected API
  */

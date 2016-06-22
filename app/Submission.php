@@ -32,5 +32,8 @@ class Submission extends BaseModel{
         self::CANDIDATE_ID,
     ];
 
+    public function submissionImage(){
+        return $this->hasMany(SubmissionImage::class, SubmissionImage::SUBMISSION_ID, self::ID);
+    }
 
 }

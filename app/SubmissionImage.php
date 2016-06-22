@@ -9,4 +9,12 @@ class SubmissionImage extends BaseModel{
 
     const TABLE = "submission_image";
     protected $table = self::TABLE;
+
+    public function image(){
+        return $this->belongsTo(Image::class, self::IMAGE_ID);
+    }
+
+    public function submission(){
+        return $this->belongsTo(Submission::class, self::SUBMISSION_ID);
+    }
 }
