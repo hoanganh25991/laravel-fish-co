@@ -6,7 +6,7 @@ class Submission extends BaseModel{
     protected $fillable = [
 
     ];
-    protected $dateFormat = "U";
+    protected $dateFormat = "timestamp";
 
     public function country(){
         return $this->belongsTo(Country::class, "country_id");
