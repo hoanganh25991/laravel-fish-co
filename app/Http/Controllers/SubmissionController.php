@@ -47,6 +47,7 @@ class SubmissionController extends Controller{
             /** 0-0, new candidate, new device */
             if(!$device){
                 $device = new Device($request->all());
+                $device->uuid = $request->uuid;
                 $candidate = new Candidate($request->all());
                 $candidate->save();
 
@@ -66,6 +67,7 @@ class SubmissionController extends Controller{
             /** this is his new device */
             if(!$device){
                 $device = new Device($request->all());
+                $device->uuid = $request->get("uuid");
                 $device->candidate_id = $candidate->id;
                 $device->save();
 
@@ -103,7 +105,9 @@ class SubmissionController extends Controller{
         /** submission with 24-hr */
         $latestSubmission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
         $now = new Carbon();
-        if($now->diffInMinutes($latestSubmission->created_at) <= 1){
+        $a = $latestSubmission->created_at;
+        $submissionTime = new Carbon($a);
+        if($now->diffInMinutes($submissionTime) <= 1){
             return $this->res("", "only one submission in 24 hr", 422);
         }
 

@@ -6,7 +6,7 @@ class Submission extends BaseModel{
     protected $fillable = [
 
     ];
-    protected $dateFormat = "timestamp";
+//    protected $dateFormat = "timestamp";
 
     public function country(){
         return $this->belongsTo(Country::class, "country_id");
@@ -19,5 +19,15 @@ class Submission extends BaseModel{
     public function image(){
         return $this->belongsTo(Image::class, "image_id");
     }
+
+//    public function getCreatedAtAttribute(){
+//        $createAt = $this->attributes["create_at"];
+//        return $createAt->timestamp;
+//    }
+
+//    public function getUpdateAtAttribute(){
+//        $updateAt = $this->attributes["update_at"];
+//        return $updateAt->timestamp;
+//    }
 
 }
