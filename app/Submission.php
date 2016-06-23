@@ -1,12 +1,14 @@
 <?php
 
 namespace App;
+use Carbon\Carbon;
+
 class Submission extends BaseModel{
     protected $table = "submission";
     protected $fillable = [
 
     ];
-//    protected $dateFormat = "timestamp";
+    protected $dates = ["redeeem_at"];
 
     public function country(){
         return $this->belongsTo(Country::class, "country_id");
@@ -20,9 +22,9 @@ class Submission extends BaseModel{
         return $this->belongsTo(Image::class, "image_id");
     }
 
-//    public function getCreatedAtAttribute(){
-//        $createAt = $this->attributes["create_at"];
-//        return $createAt->timestamp;
+//    public function getCreatedAtAttribute($value){
+////        $carbon = new Carbon($value);
+//        return $value . "hoanganh";
 //    }
 
 //    public function getUpdateAtAttribute(){

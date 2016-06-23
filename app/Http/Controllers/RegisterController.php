@@ -3,25 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Device;
-use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use Validator;
+use App\Http\Requests\ApiRequest;
+use App\Traits\ApiResponse;
 
 class RegisterController extends Controller{
     use ApiResponse;
 
-    public function index(Request $request){
-        /** validate on required field to get json from api */
-        $validator = Validator::make($request->all(), [
-            "uuid" => "required"
-        ]);
-        
-        /** validate fail */
-        if($validator->fails()){
-            return $this->res($validator->getMessageBag()->toArray(), "", 422);
-        }
+    public function index(ApiRequest $request){
+//        /** validate on required field to get json from api */
+//        $validator = Validator::make($request->all(), [
+//            "uuid" => "required"
+//        ]);
+//
+//        /** validate fail */
+//        if($validator->fails()){
+//            return $this->res($validator->getMessageBag()->toArray(), "", 422);
+//        }
         
         $uuid = $request->get("uuid");
         $device = Device::with([
