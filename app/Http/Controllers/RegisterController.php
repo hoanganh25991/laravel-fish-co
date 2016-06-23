@@ -49,18 +49,20 @@ class RegisterController extends Controller{
 
         if(!$device){
             $this->res([
-                "_token" => $token,
+                "token" => $token,
                 "device" => new \stdClass,
                 "candidate" => new \stdClass,
-                "submission" => new \stdClass,
+                "submissions" => new \stdClass,
             ]);
         }
 
+        dd($candidate);
+
         return $this->res([
-            "_token" => $token,
+            "token" => $token,
             "device" => $device,
             "candidate" => $candidate,
-            "submission" => $submissionArray
+            "submissions" => $submissionArray
         ]);
     }
 }
