@@ -14,13 +14,16 @@ use App\Device;
 use App\Submission;
 use Illuminate\Http\Request;
 
-Route::get("register","RegisterController@index");
+Route::get("register", "RegisterController@index");
 Route::post("register", "RegisterController@index");
 
 Route::get("campaigns", "CampaignController@index");
 Route::get("outlets", "OutletController@index");
 Route::post("submissions", "SubmissionController@index");
 Route::post("submission", "SubmissionController@create");
+
+Route::post("redeem", "RedeemController@index");
+Route::post("like", "LikeController@index");
 
 
 //Route::group(['middleware' => "token"], function (){
@@ -103,7 +106,7 @@ Route::group(['middleware' => "token"], function (){
     Route::post("submission/index", "SubmissionController@index");
     Route::post("submission/country", "SubmissionController@byCountry");
 
-    Route::post("{controllerName}/{action}", function($controllerName, $action, Request $request){
+    Route::post("{controllerName}/{action}", function ($controllerName, $action, Request $request){
         $capitalName = ucfirst($controllerName);
         $controller = "App\\Http\\Controllers\\{$capitalName}Controller";
         $r = (new $controller)->$action($request);

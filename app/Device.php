@@ -18,7 +18,9 @@ class Device extends BaseModel{
         return $this->belongsTo(Candidate::class, "candidate_id");
     }
 
-    public function setLastAccessAttribute($value){
-        
+    public function save(array $options = []){
+        $this->attributes["last_access"] = time();
+        parent::save($options);
     }
+
 }

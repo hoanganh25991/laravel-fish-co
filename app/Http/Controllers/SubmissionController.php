@@ -105,10 +105,10 @@ class SubmissionController extends Controller{
 
         /** submission with 24-hr */
         $latestSubmission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
-        $now = new Carbon();
+
         $createdAt = $latestSubmission->created_at;
-        $submissionTime = new Carbon($createdAt);
-        if($now->diffInMinutes($submissionTime) <= 1){
+        $delta = time() - $createdAt;
+        if($delta < 1 * 60){
             new SubmissionDeviceFormat($latestSubmission);
             return $this->res($latestSubmission->toArray(), "only one submission in 24 hr", 422);
         }
