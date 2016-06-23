@@ -19,7 +19,9 @@ class TokenController extends Controller{
          */
         $carbon = new Carbon();
         $timestamp = $carbon->timestamp;
-        $roundInMinute = ceil($timestamp / 60);
+
+        /** token changed in 24=hr */
+        $roundInMinute = ceil($timestamp / 60 / 60 / 24);
         $key = env("FISH_CO_KEY");
         return md5("{$roundInMinute}+{$key}");
     }

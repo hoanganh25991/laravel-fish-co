@@ -22,12 +22,17 @@ class RedeemController extends Controller{
         if($validator->fails()){
             return $this->res($validator->getMessageBag()->toArray());
         }
-        
-        $submission = Submission::find($request->get("submission_id"));
-        $submission->redeem_at = time();
-        $submission->save();
-        
-        new SubmissionDeviceFormat($submission);
-        return $this->res($submission->toArray());
+
+        $submission = Submission::where("id", $request->get("submission_id"))->first();
+
+        try{
+            $submission->redeem_at = time();
+            $submission->save();
+            
+            new SubmissionDeviceFormat($submission);
+            return $this->res($submission->toArray());
+        }catch(\Exception $e){
+            return $this->res($request->all(), $e->getMessage(), 422);
+        }
     }
 }
