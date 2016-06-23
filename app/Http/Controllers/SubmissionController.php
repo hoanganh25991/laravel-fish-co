@@ -108,8 +108,10 @@ class SubmissionController extends Controller{
         $now = new Carbon();
         $a = $latestSubmission->created_at;
         $submissionTime = new Carbon($a);
+        
         if($now->diffInMinutes($submissionTime) <= 1){
-            return $this->res("", "only one submission in 24 hr", 422);
+            new SubmissionDeviceFormat($latestSubmission);
+            return $this->res($latestSubmission->toArray(), "only one submission in 24 hr", 422);
         }
 
         /** move on to save */

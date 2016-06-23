@@ -33,14 +33,19 @@ class Image extends BaseModel{
         "height"
     ];
 
-//    public function setNameAttribute($value){
-//        if(empty($this->attributes["caption"])){
-//            /**
-//             * not need to check on attribute "name"
-//             */
-//            $this->attributes["caption"] = $value;
-//        }
-//    }
+    public function setNameAttribute($value){
+        /** set for it self */
+        $this->attributes["name"] = $value;
+
+        /** if caption still null, set for it */
+        /** may be caption is later on, set back */
+        if(empty($this->attributes["caption"])){
+            /**
+             * not need to check on attribute "name"
+             */
+            $this->attributes["caption"] = $value;
+        }
+    }
 
     public function maxFileSize(){
         return self::MAXIMUM_FILE_SIZE;
