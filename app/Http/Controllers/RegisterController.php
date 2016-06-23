@@ -67,7 +67,7 @@ class RegisterController extends Controller{
                 "submissions" => $submissionArray
             ]);
         }
-        
+
         return $this->res($request->all(), WARNING, 422);
     }
 }

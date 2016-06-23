@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Carbon\Carbon;
+
 class Device extends BaseModel{
     
     protected $table ="device";
@@ -11,7 +13,8 @@ class Device extends BaseModel{
         "os_ver",
         "app_ver",
         "model",
-        "manufacturer"
+        "manufacturer",
+        "last_access"
     ];
 
     public function candidate(){
@@ -19,7 +22,8 @@ class Device extends BaseModel{
     }
 
     public function save(array $options = []){
-        $this->attributes["last_access"] = time();
+        /** @warn */
+        $this->attributes["last_access"] = Carbon::now();
         parent::save($options);
     }
     
