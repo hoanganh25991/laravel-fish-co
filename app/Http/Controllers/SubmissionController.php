@@ -108,7 +108,7 @@ class SubmissionController extends Controller{
 
         $createdAt = $latestSubmission->created_at;
         $delta = time() - $createdAt;
-        if($delta < 1 * 60){
+        if($delta < 24 * 60 * 60){
             new SubmissionDeviceFormat($latestSubmission);
             return $this->res($latestSubmission->toArray(), "only one submission in 24 hr", 422);
         }

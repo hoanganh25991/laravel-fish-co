@@ -22,5 +22,9 @@ class Device extends BaseModel{
         $this->attributes["last_access"] = time();
         parent::save($options);
     }
+    
+    public function getLastAccessAttribute($value){
+        return $this->timestamp($value);
+    }
 
 }

@@ -56,11 +56,18 @@ class RegisterController extends Controller{
             ]);
         }
 
-        return $this->res([
-            "token" => $token,
-            "device" => $device,
-            "candidate" => $candidate,
-            "submissions" => $submissionArray
-        ]);
+        if($device){
+            /** save last acces from user */
+            $device->fill($request->all());
+            $device->save();
+            return $this->res([
+                "token" => $token,
+                "device" => $device,
+                "candidate" => $candidate,
+                "submissions" => $submissionArray
+            ]);
+        }
+        
+        return $this->res($request->all(), WARNING, 422);
     }
 }
