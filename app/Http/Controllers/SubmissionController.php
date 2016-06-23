@@ -86,6 +86,15 @@ class SubmissionController extends Controller{
                      */
                     return $this->res($request->all(), "borrow phone", 422);
                 }
+
+                if($device->candidate->id == $candidate->id){
+                    /** update info for device */
+                    /** be careful with $request->all() by */
+                    /** $request->get("device") */
+                    /** at client device[] */
+                    $device->fill($request->all());
+                    $device->save();
+                }
             }
         }
 
