@@ -21,7 +21,7 @@ class ApiToken{
      */
     public function handle($request, Closure $next){
         $validator = Validator::make($request->all(), [
-            "_token" => "required|token"
+            "token" => "required|token"
         ]); 
         if($validator->fails()){
             return Response::json([

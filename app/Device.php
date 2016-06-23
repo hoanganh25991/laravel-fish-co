@@ -17,4 +17,8 @@ class Device extends BaseModel{
     public function candidate(){
         return $this->belongsTo(Candidate::class, "candidate_id");
     }
+
+    public function setLastAccessAttribute($value){
+        
+    }
 }

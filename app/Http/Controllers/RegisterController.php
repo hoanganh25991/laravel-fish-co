@@ -56,8 +56,6 @@ class RegisterController extends Controller{
             ]);
         }
 
-        dd($candidate);
-
         return $this->res([
             "token" => $token,
             "device" => $device,
