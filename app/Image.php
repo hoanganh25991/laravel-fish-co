@@ -24,24 +24,23 @@ class Image extends BaseModel{
     protected $table = self::TABLE;
 
     protected $fillable = [
-        self::NAME,
-        self::CAPTION,
-        self::TYPE,
-        self::SIZE,
-        self::STYLE,
-        self::PATH,
+        "name",
+        "caption",
+        "type",
+        "size",
+        "path",
+        "width",
+        "height"
     ];
 
-    public function setNameAttribute(){
-        if(empty($this->attributes[self::CAPTION])){
-            /**
-             * not need to check on attribute "name"
-             */
-            if(isset($this->attributes[self::NAME])){
-                $this->attributes[self::CAPTION] = $this->attributes[self::NAME];
-            }
-        }
-    }
+//    public function setNameAttribute($value){
+//        if(empty($this->attributes["caption"])){
+//            /**
+//             * not need to check on attribute "name"
+//             */
+//            $this->attributes["caption"] = $value;
+//        }
+//    }
 
     public function maxFileSize(){
         return self::MAXIMUM_FILE_SIZE;

@@ -13,7 +13,7 @@ class ApiRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class ApiRequest extends Request
     public function rules()
     {
         return [
-            "uuid" => "required",
+            "uuid" => "required"
             /** although we can write token check here, but let it for middleware */
             /** middleware GROUP request for api in to 1 place */
 //            "_token" => "required"

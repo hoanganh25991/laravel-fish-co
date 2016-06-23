@@ -4,37 +4,63 @@ namespace App\Http\Controllers;
 
 use App\Device;
 use App\Http\Requests;
-use App\Http\Requests\ApiRequest;
+use App\SubmissionDeviceFormat;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Validator;
+
+use App\Http\Requests\ApiRequest;
 
 class RegisterController extends Controller{
     use ApiResponse;
 
-    public function index(ApiRequest $request){
-//        /** validate on required field to get json from api */
-//        $validator = Validator::make($request->all(), [
-//            "uuid" => "required"
-//        ]);
-//
-//        /** validate fail */
-//        if($validator->fails()){
-//            return $this->res($validator->getMessageBag()->toArray(), "", 422);
-//        }
-        
+    public function index(Request $request){
+        /** validate on required field to get json from api */
+        $validator = Validator::make($request->all(), [
+            "uuid" => "required"
+        ]);
+
+        /** validate fail */
+        if($validator->fails()){
+            return $this->res($validator->getMessageBag()->toArray(), "", 422);
+        }
+
         $uuid = $request->get("uuid");
         $device = Device::with([
             "candidate.submission" => function ($relation){
-                $relation->with("image", "country");
+                $relation->with("image");
             }
         ])->where("uuid", $uuid)->first();
-        $token = (new TokenController)->get();
-        $deviceInfo = new \stdClass();
-        if($device){
-            $deviceInfo = $device->toArray();
+
+
+        /** rebuild for device format*/
+        $candidate = $device->candidate;
+        unset($device->candidate);
+
+        /** submission */
+        $submissionArray = $candidate->submission;
+        unset($candidate->submission);
+        foreach($submissionArray as $s){
+            new SubmissionDeviceFormat($s);
         }
+
+        /** token */
+        $token = (new TokenController)->get();
+
+        if(!$device){
+            $this->res([
+                "_token" => $token,
+                "device" => new \stdClass,
+                "candidate" => new \stdClass,
+                "submission" => new \stdClass,
+            ]);
+        }
+
         return $this->res([
             "_token" => $token,
-            "device" => $deviceInfo
+            "device" => $device,
+            "candidate" => $candidate,
+            "submission" => $submissionArray
         ]);
     }
 }

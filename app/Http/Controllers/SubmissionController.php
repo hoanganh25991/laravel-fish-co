@@ -7,6 +7,7 @@ use App\Device;
 use App\Http\Requests;
 use App\Image;
 use App\Submission;
+use App\SubmissionDeviceFormat;
 use App\SubmissionImage;
 use App\Traits\ApiResponse;
 use Carbon\Carbon;
@@ -194,7 +195,10 @@ class SubmissionController extends Controller{
                         $latestSubmission->image_id = $image->id;
                         $latestSubmission->save();
 
-                        return $this->res("", "success create submission");
+                        /** device format on submission*/
+                        new SubmissionDeviceFormat($latestSubmission);
+
+                        return $this->res($latestSubmission->toArray(), "success create submission");
                     }else{
                         /**
                          * can not move file
@@ -221,32 +225,42 @@ class SubmissionController extends Controller{
     public function index(Request $request){
         /** validate on required field for api to response */
         $validator = Validator::make($request->all(), [
-            "uuid" => "required",
-            "page" => "required"
+//            "uuid" => "required",
+"page" => "required"
         ]);
-        
+
         if($validator->fails()){
             return $this->res($validator->getMessageBag()->toArray(), "", 422);
         }
-        
-        $uuid = $request->get("uuid");
-        $page = $request->get("page");
-        $device = Device::with([
-            "candidate" => function ($relation) use ($page){
-                $relation->with([
-                    "submission" => function ($relation) use ($page){
-                        $offset = self::LIMIT * ($page - 1);
-                        $relation->with("image", "country")->skip($offset)->take(self::LIMIT);
-                    }
-                ]);
-            }
-        ])->where("uuid", $uuid)->first();
 
-        $deviceInfo = new \stdClass();
-        if($device){
-            $deviceInfo = $device->toArray();
+//        $uuid = $request->get("uuid");
+        $page = $request->get("page");
+        $offset = self::LIMIT * ($page - 1);
+//        $device = Device::with([
+//            "candidate" => function ($relation) use ($page){
+//                $relation->with([
+//                    "submission" => function ($relation) use ($page){
+//                        $offset = self::LIMIT * ($page - 1);
+//                        $relation->with("image", "candidate")->skip($offset)->take(self::LIMIT);
+//                    }
+//                ]);
+//            }
+//        ])->where("uuid", $uuid)->first();
+
+//        $deviceInfo = new \stdClass();
+//        if($device){
+//            $deviceInfo = $device->toArray();
+//        }
+//
+//        return $this->res($deviceInfo);
+
+        /** return $data */
+        /** return $data */
+        $allSubmissions = Submission::with("image", "candidate")->skip($offset)->take(self::LIMIT)->get();
+        foreach($allSubmissions as $s){
+            new SubmissionDeviceFormat($s);
         }
 
-        return $this->res($deviceInfo);
+        return $this->res($allSubmissions->toArray());
     }
 }
