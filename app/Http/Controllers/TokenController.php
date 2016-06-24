@@ -31,7 +31,7 @@ class TokenController extends Controller{
      * @return bool
      */
     public function checkToken($token){
-        var_dump($token, $this->get());
+//        var_dump($token, $this->get());
         if($token != $this->get()){
             return false;
         }

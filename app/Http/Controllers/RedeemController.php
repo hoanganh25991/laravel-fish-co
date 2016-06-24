@@ -23,16 +23,18 @@ class RedeemController extends Controller{
             return $this->res($validator->getMessageBag()->toArray());
         }
 
+        /** find $submission */
+        $submission = null;
         $submission = Submission::where("id", $request->get("submission_id"))->first();
 
-        try{
+        if($submission){
             $submission->redeem_at = time();
             $submission->save();
-            
+
             new SubmissionDeviceFormat($submission);
             return $this->res($submission->toArray());
-        }catch(\Exception $e){
-            return $this->res($request->all(), $e->getMessage(), 422);
         }
+
+        return $this->res($request->all(), "", 422);
     }
 }

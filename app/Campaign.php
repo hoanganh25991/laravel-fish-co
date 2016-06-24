@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Traits\ApiUtil;
+
 class Campaign extends BaseModel{
+    use ApiUtil;
     const ID = "id";
     const TITLE = "title";
     const DES = "des";
@@ -10,4 +13,8 @@ class Campaign extends BaseModel{
 
     const TABLE = "campaign";
     protected $table = self::TABLE;
+
+    public function getEndAtAttribute($value){
+        return $this->timestamp($value);
+    }
 }

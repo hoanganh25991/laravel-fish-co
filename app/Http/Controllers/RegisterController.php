@@ -25,6 +25,10 @@ class RegisterController extends Controller{
             return $this->res($validator->getMessageBag()->toArray(), "", 422);
         }
 
+        /** find out device */
+        $device = null;
+
+        /* find him in db */
         $uuid = $request->get("uuid");
         $device = Device::with([
             "candidate.submission" => function ($relation){
@@ -32,42 +36,35 @@ class RegisterController extends Controller{
             }
         ])->where("uuid", $uuid)->first();
 
-
-        /** rebuild for device format*/
-        $candidate = $device->candidate;
-        unset($device->candidate);
-
-        /** submission */
-        $submissionArray = $candidate->submission;
-        unset($candidate->submission);
-        foreach($submissionArray as $s){
-            new SubmissionDeviceFormat($s);
+        /* create new device if no one */
+        if(!$device){
+            $device = new Device($request->all());
+            $device->save();
         }
 
         /** token */
         $token = (new TokenController)->get();
 
-        if(!$device){
-            $this->res([
-                "token" => $token,
-                "device" => new \stdClass,
-                "candidate" => new \stdClass,
-                "submissions" => new \stdClass,
-            ]);
-        }
-
+        /** find candidate */
+        $candidate = null;
         if($device){
-            /** save last acces from user */
-            $device->fill($request->all());
-            $device->save();
-            return $this->res([
-                "token" => $token,
-                "device" => $device,
-                "candidate" => $candidate,
-                "submissions" => $submissionArray
-            ]);
+            $candidate = $device->candidate;
+            unset($device->candidate);
         }
 
-        return $this->res($request->all(), WARNING, 422);
+        /** submission */
+        $submission = null;
+        if($candidate){
+            $submission = $candidate->submission;
+            unset($candidate->submission);
+        }
+
+        $r = [
+            "token" => $token,
+            "device" => $device,
+            "candidate" => $candidate,
+            "submissions" => $submission,
+        ];
+        return $this->res($r);
     }
 }

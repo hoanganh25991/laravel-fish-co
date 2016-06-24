@@ -15,8 +15,13 @@ use App\Submission;
 use Illuminate\Http\Request;
 
 /** device HAVE TO SEND TO /api/regiter to get token*/
-Route::get("api/register", "RegisterController@index");
-Route::post("api/register", "RegisterController@index");
+Route::group(["prefix" => "api"], function(){
+    Route::get("register", "RegisterController@index");
+    Route::post("register", "RegisterController@index");
+
+    Route::get("outlets", "OutletController@index");
+    Route::post("outlets", "OutletController@index");
+});
 
 Route::group([
     "middleware" => "token",
@@ -24,9 +29,6 @@ Route::group([
 ], function (){
     Route::get("campaigns", "CampaignController@index");
     Route::post("campaigns", "CampaignController@index");
-
-    Route::get("outlets", "OutletController@index");
-    Route::post("outlets", "OutletController@index");
 
     Route::get("submissions", "SubmissionController@index");
     Route::post("submissions", "SubmissionController@index");
