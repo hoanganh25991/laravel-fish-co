@@ -46,7 +46,10 @@ class SubmissionController extends Controller{
          * contact number is IDENTIFIER
          * base on contact number, define candidate
          */
+        $candidate = null;
         $candidate = Candidate::with("device")->where("contact_number", $request->get("contact_number"))->first();
+
+        $device = null;
         $device = Device::with("candidate")->where("uuid", $request->get("uuid"))->first();
         /**
          * |0|1|
@@ -55,11 +58,11 @@ class SubmissionController extends Controller{
         if(!$candidate){
             /** 0-0, new candidate, new device */
             if(!$device){
-                $device = new Device($request->all());
-                $device->uuid = $request->uuid;
                 $candidate = new Candidate($request->all());
                 $candidate->save();
 
+                $device = new Device($request->all());
+                $device->uuid = $request->uuid;
                 $device->candidate_id = $candidate->id;
                 $device->save();
             }
@@ -67,7 +70,7 @@ class SubmissionController extends Controller{
             /** 0-1, no candidate, but device belongTo "someone" */
             /** many he submit wrong phone number|borrow phone */
             if($device){
-                $this->res($request->all(), "may wrong phone number | borrow phone", 422);
+                return $this->res($request->all(), "may wrong phone number | borrow phone", 422);
             }
         }
 
@@ -110,7 +113,7 @@ class SubmissionController extends Controller{
         }
 
         /** $candidate, $device checked OK */
-
+        
         /** submission with 24-hr */
         $latestSubmission = null;
         $latestSubmission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
