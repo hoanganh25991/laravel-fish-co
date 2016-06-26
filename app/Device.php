@@ -13,8 +13,7 @@ class Device extends BaseModel{
         "os_ver",
         "app_ver",
         "model",
-        "manufacturer",
-        "last_access"
+        "manufacturer"
     ];
 
     public function candidate(){

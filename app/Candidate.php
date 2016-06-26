@@ -6,7 +6,9 @@ namespace App;
 class Candidate extends BaseModel{
     protected $table = "candidate";
     protected $fillable = [
-       
+        "name",
+        "email",
+        "contact_number",
     ];
 
     public function submission(){
