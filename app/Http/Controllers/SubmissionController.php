@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Candidate;
+use App\Country;
 use App\Device;
 use App\Http\Requests;
 use App\Image;
@@ -27,11 +28,18 @@ class SubmissionController extends Controller{
 
     public function create(Request $request){
         /** validate */
+        $countryIdArray = implode(',', Country::lists("id")->toArray());
         $validator = Validator::make($request->all(), [
-            "contact_number" => "bail|required",
             "uuid" => "required",
-            "image" => "bail|required",
+            "contact_number" => "required",
+            "image" => "required",
+            "country_id" => "required|in:{$countryIdArray}"
         ]);
+
+        /** check validate */
+        if($validator->fails()){
+            return $this->res($validator->getMessageBag()->toArray());
+        }
 
 
         /**
@@ -104,118 +112,111 @@ class SubmissionController extends Controller{
         /** $candidate, $device checked OK */
 
         /** submission with 24-hr */
+        $latestSubmission = null;
         $latestSubmission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
 
-        $createdAt = $latestSubmission->created_at;
-        $delta = time() - $createdAt;
-        if($delta < 24 * 60 * 60){
-            new SubmissionDeviceFormat($latestSubmission);
-            return $this->res($latestSubmission->toArray(), "only one submission in 24 hr", 422);
+        if($latestSubmission){
+            $createdAt = $latestSubmission->created_at;
+            $delta = time() - $createdAt;
+            if($delta < 24 * 60 * 60){
+                new SubmissionDeviceFormat($latestSubmission);
+                return $this->res($latestSubmission->toArray(), "only one submission in 24 hr", 422);
+            }
         }
-
         /** move on to save */
 
-        /** check validate */
-        if($validator->fails()){
-            return $this->res($validator->getMessageBag()->toArray());
-        }
 
-        if(!$validator->fails()){
-            /**  create Submission */
+        /**  create Submission */
+        /**
+         * handle image
+         * {"name":"678085-house-128.png","type":"image\/png","tmp_name":"C:\\Users\\hoanganh25991\\AppData\\Local\\Temp\\phpE453.tmp","error":0,"size":2762}
+         */
+        $imageFile = $_FILES["image"];
+
+        if($imageFile["error"] == 0){
+            $image = new Image();
+
             /**
-             * handle image
-             * {"name":"678085-house-128.png","type":"image\/png","tmp_name":"C:\\Users\\hoanganh25991\\AppData\\Local\\Temp\\phpE453.tmp","error":0,"size":2762}
+             * PUSH custom validator in to Image@isImage
+             * ^^ cool right
              */
-            $imageFile = $_FILES["image"];
+            $validator = Validator::make($imageFile, [
+                "tmp_name" => "bail|isImage",
+                "size" => "bail|max:{$image->maxFileSize()}",
+            ]);
 
-            if($imageFile["error"] == 0){
-                $image = new Image();
-
-                /**
-                 * PUSH custom validator in to Image@isImage
-                 * ^^ cool right
-                 */
-                $validator = Validator::make($imageFile, [
-                    "tmp_name" => "bail|isImage",
-                    "size" => "bail|max:{$image->maxFileSize()}",
-                ]);
-
-                if($validator->fails()){
-                    return $this->res($validator->getMessageBag()->toArray(), "image uploaded, validate fail", 422);
-                }
-
-                if(!$validator->fails()){
-                    /**
-                     * move from temp to /public/upload/
-                     */
-                    $fileNameWithExt = $imageFile["name"];
-
-                    /** NO SPACE in file name by md5  */
-                    $fileName = md5(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
-                    $extension = pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
-                    $fileNameWithExt = "{$fileName}.{$extension}";
-
-                    /** IF FILE NAME EXIST, run loop while */
-                    $tmpName = $fileName;
-                    $outputDir = env("UPLOAD_FOLDER");
-                    if(!is_dir($outputDir) && !file_exists($outputDir)){
-                        mkdir($outputDir, 777, true);
-                    }
-
-                    /** run loop */
-                    $i = 0;
-                    while(file_exists($outputDir . DIRECTORY_SEPARATOR . $fileName . "." . $extension)){
-                        $fileName = "{$tmpName}_{$i}";
-                        $fileNameWithExt = "{$fileName}.{$extension}";
-                        $i++;
-                    }
-                    $imagePath = $outputDir . DIRECTORY_SEPARATOR . $fileNameWithExt;
-
-                    $tmpFileMoved = move_uploaded_file($imageFile["tmp_name"], $imagePath);
-
-                    /** move file success */
-                    if($tmpFileMoved){
-                        $image->fill($request->all());
-                        $image->fill($imageFile);
-                        /**
-                         * path not show where image is, just the
-                         * file name
-                         * when get out Image from database
-                         * api give device truth link
-                         */
-//                        $image->path = $imagePath;
-                        $image->path = $fileNameWithExt;
-                        list($width, $height) = getimagesize($imagePath);
-                        $image->width = $width;
-                        $image->height = $height;
-                        $image->save();
-
-                        $latestSubmission = new Submission();
-                        $latestSubmission->country_id = $request->get("country_id");
-                        $latestSubmission->candidate_id = $candidate->id;
-                        $latestSubmission->image_id = $image->id;
-                        $latestSubmission->save();
-
-                        /** device format on submission*/
-                        new SubmissionDeviceFormat($latestSubmission);
-
-                        return $this->res($latestSubmission->toArray(), "success create submission");
-                    }else{
-                        /**
-                         * can not move file
-                         * permission/ect
-                         */
-                        return $this->res($imageFile, "can not move file", 422);
-                    }
-                }
+            if($validator->fails()){
+                return $this->res($validator->getMessageBag()->toArray(), "image uploaded, validate fail", 422);
             }
 
-            if($imageFile["error"] > 0){
-                return $this->res($imageFile, "file upload error", 422);
+            if(!$validator->fails()){
+                /**
+                 * move from temp to /public/upload/
+                 */
+                $fileNameWithExt = $imageFile["name"];
+
+                /** NO SPACE in file name by md5  */
+                $fileName = md5(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
+                $extension = pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
+                $fileNameWithExt = "{$fileName}.{$extension}";
+
+                /** IF FILE NAME EXIST, run loop while */
+                $tmpName = $fileName;
+                $outputDir = env("UPLOAD_FOLDER");
+                if(!is_dir($outputDir) && !file_exists($outputDir)){
+                    mkdir($outputDir, 777, true);
+                }
+
+                /** run loop */
+                $i = 0;
+                while(file_exists($outputDir . DIRECTORY_SEPARATOR . $fileName . "." . $extension)){
+                    $fileName = "{$tmpName}_{$i}";
+                    $fileNameWithExt = "{$fileName}.{$extension}";
+                    $i++;
+                }
+                $imagePath = $outputDir . DIRECTORY_SEPARATOR . $fileNameWithExt;
+
+                $tmpFileMoved = move_uploaded_file($imageFile["tmp_name"], $imagePath);
+
+                /** move file success */
+                if($tmpFileMoved){
+                    $image->fill($request->all());
+                    $image->fill($imageFile);
+                    /**
+                     * path not show where image is, just the
+                     * file name
+                     * when get out Image from database
+                     * api give device truth link
+                     */
+//                        $image->path = $imagePath;
+                    $image->path = $fileNameWithExt;
+                    list($width, $height) = getimagesize($imagePath);
+                    $image->width = $width;
+                    $image->height = $height;
+                    $image->save();
+
+                    $latestSubmission = new Submission();
+                    $latestSubmission->country_id = $request->get("country_id");
+                    $latestSubmission->candidate_id = $candidate->id;
+                    $latestSubmission->image_id = $image->id;
+                    $latestSubmission->save();
+
+                    /** device format on submission*/
+                    new SubmissionDeviceFormat($latestSubmission);
+
+                    return $this->res($latestSubmission->toArray(), "success create submission");
+                }else{
+                    /**
+                     * can not move file
+                     * permission/ect
+                     */
+                    return $this->res($imageFile, "can not move file", 422);
+                }
             }
         }
 
-        return $this->res("", WARNING);
+        return $this->res($imageFile, "file upload error", 422);
+
     }
 
     /**
