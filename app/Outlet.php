@@ -11,6 +11,9 @@ class Outlet extends BaseModel{
         "instagram_url",
         "website_url",
         "facebook_url",
-        "twitter_url"
+        "twitter_url",
+        "lat",
+        "lng",
+        "opening_hours"
     ];
 }

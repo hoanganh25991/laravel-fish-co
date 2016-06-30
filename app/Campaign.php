@@ -13,7 +13,7 @@ class Campaign extends BaseModel{
 
     const TABLE = "campaign";
     protected $table = self::TABLE;
-    protected $fillable = ["title", "description", "pdf_url"];
+    protected $fillable = ["title", "description", "pdf_url", "hashtag"];
 
     public function getEndAtAttribute($value){
         return $this->timestamp($value);
