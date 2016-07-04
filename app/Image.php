@@ -32,6 +32,8 @@ class Image extends BaseModel{
         "width",
         "height"
     ];
+    
+    protected $hidden = ["name"];
 
     public function setNameAttribute($value){
         /** set for it self */
@@ -59,14 +61,17 @@ class Image extends BaseModel{
         return true;
     }
 
-    public function getPathAttribute(){
+    public function getPathAttribute($imagePath){
+        if(!$imagePath){
+            return null;
+        }
         /**
          * instead of return $this->attributes["path"]
          * return full linkt for device
          * >hostname + /upload/ + filename
          */
         $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
-        $relativeLink = $uploadFoler . "/" . $this->attributes["path"];
+        $relativeLink = $uploadFoler . "/" . rawurlencode($imagePath);
         $realLink = asset($relativeLink);
         return $realLink;
     }

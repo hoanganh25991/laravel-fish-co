@@ -159,7 +159,8 @@ class SubmissionController extends Controller{
                 $fileNameWithExt = $imageFile["name"];
 
                 /** NO SPACE in file name by md5  */
-                $fileName = md5(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
+//                $fileName = md5(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
+                $fileName = rawurlencode(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
                 $extension = pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
                 $fileNameWithExt = "{$fileName}.{$extension}";
 
