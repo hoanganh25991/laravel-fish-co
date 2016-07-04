@@ -242,7 +242,17 @@ class SubmissionController extends Controller{
         $offset = self::LIMIT * ($page - 1);
 
         /** return $data */
-        $allSubmissions = Submission::with("image", "candidate")->skip($offset)->take(self::LIMIT)->get();
+        $query = Submission::with("image", "candidate");
+        
+        /** filter on country Id */
+        $countryId = null;
+        $countryId = $request->get("country_id");
+        if($countryId){
+            $query = $query->where("country_id", $countryId);
+        }
+        
+        /* get submission */
+        $allSubmissions = $query->skip($offset)->take(self::LIMIT)->get();
         foreach($allSubmissions as $s){
             new SubmissionDeviceFormat($s);
         }

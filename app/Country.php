@@ -26,6 +26,9 @@ class Country extends BaseModel{
          * return full linkt for device
          * >hostname + /upload/ + filename
          */
+        if(!$imageName){
+            return null;
+        }
         $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
         $relativeLink = $uploadFoler . "/" . $imageName;
         $realLink = asset($relativeLink);
@@ -33,6 +36,9 @@ class Country extends BaseModel{
     }
 
     public function getCoverImageAttribute($imageName){
+        if(!$imageName){
+            return null;
+        }
         /**
          * instead of return $this->attributes["path"]
          * return full linkt for device

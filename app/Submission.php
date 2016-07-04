@@ -7,7 +7,7 @@ use Carbon\Carbon;
 class Submission extends BaseModel{
     protected $table = "submission";
     protected $fillable = [
-        
+        "country_id",
     ];
     protected $dates = ["redeeem_at"];
 
