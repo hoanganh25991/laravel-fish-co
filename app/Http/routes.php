@@ -21,6 +21,8 @@ Route::group(["prefix" => "api"], function(){
 
     Route::get("outlets", "OutletController@index");
     Route::post("outlets", "OutletController@index");
+    
+    Route::get("images", "ImageController@index");
 });
 
 Route::group([

@@ -7,7 +7,7 @@ class SubmissionDeviceFormat{
             $image = $submission->image;
             if($image){
                 /** push image-attribute out-into submission */
-                $submission->setAttribute("name", $image->name);
+//                $submission->setAttribute("name", $image->name);
                 $submission->setAttribute("type", $image->type);
                 $submission->setAttribute("size", $image->size);
                 $submission->setAttribute("caption", $image->caption);
