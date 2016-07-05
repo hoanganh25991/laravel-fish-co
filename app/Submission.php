@@ -23,6 +23,17 @@ class Submission extends BaseModel{
         return $this->belongsTo(Image::class, "image_id");
     }
 
+//    public function like(){
+//        return $this->belongsToMany(Like::class, null, "submission_id");
+//    }
+    public function like(){
+        return $this->hasMany(Like::class, "submission_id", "id");
+    }
+
+    public function likeByDevice(){
+        return $this->hasOne(Like::class, "submission_id", "id");
+    }
+
     public function getRedeemAtAttribute($value){
         return $this->timestamp($value);
     }

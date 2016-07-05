@@ -16,10 +16,16 @@ class SubmissionDeviceFormat{
                 $submission->setAttribute("height", $image->height);
 
                 /** remove attribute, doesn't want to */
-                unset($submission->image);
-                return true;
             }
-            return false;
+            unset($submission->image);
+
+            $likeByDevice = $submission->likeByDevice;
+            if($likeByDevice){
+                $submission->like = $likeByDevice;
+            }
+            /* remove attribute */
+//            unset($submission->like_by_device);
+            unset($submission->likeByDevice);
     }
 
 }

@@ -242,8 +242,14 @@ class SubmissionController extends Controller{
         $page = $request->get("page");
         $offset = self::LIMIT * ($page - 1);
 
+        $uuid = $request->get("uuid");
+        $device = Device::where("uuid", $uuid)->first();
+        $deviceId = $device->id;
+
         /** return $data */
-        $query = Submission::with("image", "candidate");
+        $query = Submission::with(["image", "candidate", "likeByDevice" => function($relation) use($deviceId){
+            $relation->where("device_id", $deviceId);
+        }]);
         
         /** filter on country Id */
         $countryId = null;
