@@ -166,7 +166,12 @@ class SubmissionController extends Controller{
 
                 /** IF FILE NAME EXIST, run loop while */
                 $tmpName = $fileName;
-                $outputDir = env("UPLOAD_FOLDER");
+//                $outputDir = env("UPLOAD_FOLDER");
+//                $url = "/var/www/html/fishco/api";
+//                $lastSplash = substr($url, 0, strrpos($url, '/'));
+//                var_dump($lastSplash);
+//                $outputDir = substr(base_path(), 0, strpos(base_path(), "/")) . DIRECTORY_SEPARATOR . "uploads";
+                $outputDir = Image::getUploadDir();
                 if(!is_dir($outputDir) && !file_exists($outputDir)){
                     mkdir($outputDir, 777, true);
                 }

@@ -13,7 +13,8 @@ class Device extends BaseModel{
         "os_ver",
         "app_ver",
         "model",
-        "manufacturer"
+        "manufacturer",
+        "uuid"
     ];
 
     public function candidate(){

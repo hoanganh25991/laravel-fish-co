@@ -70,9 +70,15 @@ class Image extends BaseModel{
          * return full linkt for device
          * >hostname + /upload/ + filename
          */
-        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
-        $relativeLink = $uploadFoler . "/" . rawurlencode($imagePath);
-        $realLink = asset($relativeLink);
-        return $realLink;
+//        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
+//        $uploadFolder = self::getUploadDir();
+        $relativeLink = substr(url(""), 0, strrpos(url(""), "/")) . "/uploads" . "/" . rawurlencode($imagePath);
+//        $realLink = asset($relativeLink);
+//        return $realLink;
+        return $relativeLink;
+    }
+
+    public static function getUploadDir(){
+        return substr(base_path(), 0, strrpos(base_path(), "/")) . DIRECTORY_SEPARATOR . "uploads";
     }
 }
