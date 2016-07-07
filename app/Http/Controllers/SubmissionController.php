@@ -33,7 +33,8 @@ class SubmissionController extends Controller{
             "uuid" => "required",
             "contact_number" => "required",
             "image" => "required",
-            "country_id" => "required|in:{$countryIdArray}"
+            "country_id" => "required|in:{$countryIdArray}",
+            "campaign_id" => "required"
         ]);
 
         /** check validate */
@@ -114,9 +115,11 @@ class SubmissionController extends Controller{
 
         /** $candidate, $device checked OK */
         
+        /** Submission base on CampaignId */
+        $campaignId = $request->get("campaign_id");
         /** submission with 24-hr */
         $latestSubmission = null;
-        $latestSubmission = Submission::orderBy("created_at", "desc")->where("candidate_id", $candidate->id)->first();
+        $latestSubmission = Submission::orderBy("created_at", "desc")->where("campaign_id", $campaignId)->where("candidate_id", $candidate->id)->first();
 
         if($latestSubmission){
             $createdAt = $latestSubmission->created_at;
@@ -237,7 +240,8 @@ class SubmissionController extends Controller{
         /** validate on required field for api to response */
         $validator = Validator::make($request->all(), [
             "uuid" => "required",
-            "page" => "required"
+            "page" => "required",
+            "campaign_id" => "required"
         ]);
 
         if($validator->fails()){
@@ -251,10 +255,12 @@ class SubmissionController extends Controller{
         $device = Device::where("uuid", $uuid)->first();
         $deviceId = $device->id;
 
+        /** Submissions base on CampaignId */
+        $campaignId = $request->get("campaign_id");
         /** return $data */
         $query = Submission::with(["image", "candidate", "likeByDevice" => function($relation) use($deviceId){
             $relation->where("device_id", $deviceId);
-        }]);
+        }])->where("campaign_id", $campaignId);
         
         /** filter on country Id */
         $countryId = null;

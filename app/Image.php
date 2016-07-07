@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Traits\ApiUtil;
+
 class Image extends BaseModel{
+    use ApiUtil;
     const ID = "id";
     const NAME = "name";
     const TYPE = "type";
@@ -62,20 +65,8 @@ class Image extends BaseModel{
     }
 
     public function getPathAttribute($imagePath){
-        if(!$imagePath){
-            return null;
-        }
-        /**
-         * instead of return $this->attributes["path"]
-         * return full linkt for device
-         * >hostname + /upload/ + filename
-         */
-//        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
-//        $uploadFolder = self::getUploadDir();
-        $relativeLink = substr(url(""), 0, strrpos(url(""), "/")) . "/uploads" . "/" . rawurlencode($imagePath);
-//        $realLink = asset($relativeLink);
-//        return $realLink;
-        return $relativeLink;
+        $link = $this->getUrl($imagePath);
+        return $link;
     }
 
     public static function getUploadDir(){
