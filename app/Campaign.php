@@ -13,9 +13,34 @@ class Campaign extends BaseModel{
 
     const TABLE = "campaign";
     protected $table = self::TABLE;
-    protected $fillable = ["title", "description", "pdf_url", "hashtag"];
+    protected $fillable = [
+        "title",
+        "description",
+        "pdf_url",
+        "hashtag",
+        "start_at",
+        "end_at",
+        "cover_image"
+    ];
 
     public function getEndAtAttribute($value){
+        return $this->timestamp($value);
+    }
+    
+    public function getCoverImageAttribute($filePath){
+        return $this->getUrl($filePath);
+    }
+    
+    public function getPdfUrlAttribute($pdfPath){
+        $link = $this->getUrl($pdfPath);
+        return $link;
+    }
+    
+    public function submission(){
+        return $this->hasMany(Submission::class, "campaign_id", "id");
+    }
+
+    public function getStartAtAttribute($value){
         return $this->timestamp($value);
     }
 }
