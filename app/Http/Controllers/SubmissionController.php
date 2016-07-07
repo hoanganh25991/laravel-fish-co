@@ -211,6 +211,7 @@ class SubmissionController extends Controller{
                     $latestSubmission->country_id = $request->get("country_id");
                     $latestSubmission->candidate_id = $candidate->id;
                     $latestSubmission->image_id = $image->id;
+                    $latestSubmission->campaign_id = $campaignId;
                     $latestSubmission->save();
 
                     /** device format on submission*/
