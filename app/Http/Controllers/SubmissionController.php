@@ -157,23 +157,17 @@ class SubmissionController extends Controller{
 
             if(!$validator->fails()){
                 /**
-                 * move from temp to /public/upload/
+                 * move from temp to upload folder
                  */
                 $fileNameWithExt = $imageFile["name"];
 
                 /** NO SPACE in file name by md5  */
-//                $fileName = md5(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
                 $fileName = rawurlencode(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
                 $extension = pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
                 $fileNameWithExt = "{$fileName}.{$extension}";
 
                 /** IF FILE NAME EXIST, run loop while */
                 $tmpName = $fileName;
-//                $outputDir = env("UPLOAD_FOLDER");
-//                $url = "/var/www/html/fishco/api";
-//                $lastSplash = substr($url, 0, strrpos($url, '/'));
-//                var_dump($lastSplash);
-//                $outputDir = substr(base_path(), 0, strpos(base_path(), "/")) . DIRECTORY_SEPARATOR . "uploads";
                 $outputDir = Image::getUploadDir();
                 if(!is_dir($outputDir) && !file_exists($outputDir)){
                     mkdir($outputDir, 777, true);
@@ -200,7 +194,6 @@ class SubmissionController extends Controller{
                      * when get out Image from database
                      * api give device truth link
                      */
-//                        $image->path = $imagePath;
                     $image->path = $fileNameWithExt;
                     list($width, $height) = getimagesize($imagePath);
                     $image->width = $width;

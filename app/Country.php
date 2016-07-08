@@ -24,12 +24,11 @@ class Country extends BaseModel{
         /**
          * instead of return $this->attributes["path"]
          * return full linkt for device
-         * >hostname + /upload/ + filename
          */
         if(!$imageName){
             return null;
         }
-        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
+        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "../uploads";
         $relativeLink = $uploadFoler . "/" . $imageName;
         $realLink = asset($relativeLink);
         return $realLink;
@@ -42,9 +41,8 @@ class Country extends BaseModel{
         /**
          * instead of return $this->attributes["path"]
          * return full linkt for device
-         * >hostname + /upload/ + filename
          */
-        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
+        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "../uploads";
         $relativeLink = $uploadFoler . "/" . $imageName;
         $realLink = asset($relativeLink);
         return $realLink;

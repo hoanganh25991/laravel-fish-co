@@ -24,13 +24,14 @@ trait ApiUtil{
         /**
          * instead of return $this->attributes["path"]
          * return full linkt for device
+<<<<<<< HEAD
          * >hostname + /upload/ + filename
          */
 //        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "public/upload";
 //        $uploadFolder = self::getUploadDir();
-        $relativeLink = substr(url(""), 0, strrpos(url(""), "/")) . "/uploads" . "/" . rawurlencode($filePath);
 //        $realLink = asset($relativeLink);
 //        return $realLink;
+        $relativeLink = substr(url(""), 0, strrpos(url(""), "/")) . "/uploads" . "/" . rawurlencode($filePath);
         return $relativeLink;
     }
 
