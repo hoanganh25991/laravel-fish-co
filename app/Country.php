@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Traits\ApiUtil;
+
 class Country extends BaseModel{
+    use ApiUtil;
     protected $table = "country";
 
     protected $fillable = [
@@ -21,30 +24,10 @@ class Country extends BaseModel{
     }
 
     public function getFlagImageAttribute($imageName){
-        /**
-         * instead of return $this->attributes["path"]
-         * return full linkt for device
-         */
-        if(!$imageName){
-            return null;
-        }
-        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "../uploads";
-        $relativeLink = $uploadFoler . "/" . $imageName;
-        $realLink = asset($relativeLink);
-        return $realLink;
+        return $this->getUrl($imageName);
     }
 
     public function getCoverImageAttribute($imageName){
-        if(!$imageName){
-            return null;
-        }
-        /**
-         * instead of return $this->attributes["path"]
-         * return full linkt for device
-         */
-        $uploadFoler = env("UPLOAD_DIRECTORY")? env("UPLOAD_DIRECTORY") : "../uploads";
-        $relativeLink = $uploadFoler . "/" . $imageName;
-        $realLink = asset($relativeLink);
-        return $realLink;
+        return $this->getUrl($imageName);
     }
 }
