@@ -22,7 +22,7 @@ class SubmissionController extends Controller{
     const STATUS_MSG = "statusMsg";
     const DATA = "data";
 
-    const LIMIT = 7;
+    const LIMIT = 20;
 
     use ApiResponse;
 
@@ -234,7 +234,7 @@ class SubmissionController extends Controller{
         /** validate on required field for api to response */
         $validator = Validator::make($request->all(), [
             "uuid" => "required",
-            "page" => "required",
+//            "page" => "required",
             "campaign_id" => "required"
         ]);
 
@@ -242,8 +242,7 @@ class SubmissionController extends Controller{
             return $this->res($validator->getMessageBag()->toArray(), "", 422);
         }
 
-        $page = $request->get("page");
-        $offset = self::LIMIT * ($page - 1);
+
 
         $uuid = $request->get("uuid");
         $device = Device::where("uuid", $uuid)->first();
@@ -264,7 +263,16 @@ class SubmissionController extends Controller{
         }
         
         /* get submission */
-        $allSubmissions = $query->skip($offset)->take(self::LIMIT)->get();
+        $page = $request->get("page");
+        if($page && is_numeric($page)){
+            $limit = $request->get("limit");
+            if(!$limit || !is_numeric($limit)){
+                $limit = self::LIMIT;
+            }
+            $offset = $limit * ($page - 1);
+            $query->skip($offset)->take($limit);
+        }
+        $allSubmissions = $query->get();
         foreach($allSubmissions as $s){
             new SubmissionDeviceFormat($s);
         }
