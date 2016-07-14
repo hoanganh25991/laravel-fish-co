@@ -52,16 +52,16 @@ class SubmissionController extends Controller{
 
         $device = null;
         $device = Device::with("candidate")->where("uuid", $request->get("uuid"))->first();
+       
         /**
          * |0|1|
          * |0|1|
          */
         if(!$candidate){
+            $candidate = new Candidate($request->all());
+            $candidate->save();
             /** 0-0, new candidate, new device */
             if(!$device){
-                $candidate = new Candidate($request->all());
-                $candidate->save();
-
                 $device = new Device($request->all());
                 $device->uuid = $request->uuid;
                 $device->candidate_id = $candidate->id;
@@ -71,7 +71,9 @@ class SubmissionController extends Controller{
             /** 0-1, no candidate, but device belongTo "someone" */
             /** many he submit wrong phone number|borrow phone */
             if($device){
-                return $this->res($request->all(), "may wrong phone number | borrow phone", 422);
+//                return $this->res($request->all(), "may wrong phone number | borrow phone", 422);
+                $device->candidate_id = $candidate->id;
+                $device->save();
             }
         }
 
@@ -93,23 +95,37 @@ class SubmissionController extends Controller{
 
             /** 1-1, has candidate, device found base on uuid */
             if($device){
-                /** compare candidate_id & candidate->id */
-                if($device->candidate->id != $candidate->id){
-                    /**
-                     * he borrow phone from some one
-                     * NOT ALLOW
-                     */
-                    return $this->res($request->all(), "borrow phone", 422);
-                }
+                $candidateFromDevice  = null;
+                $candidateFromDevice = $device->candidate;
+                
+                /* compare candidate from device vs candiate found */
+                if($candidateFromDevice){
+                    /** compare candidate_id & candidate->id */
+                    if($candidateFromDevice->id != $candidate->id){
+                        /**
+                         * he borrow phone from some one
+                         * NOT ALLOW
+                         */
+//                        return $this->res($request->all(), "borrow phone", 422);
+                        
+                        /* at this point 13/07, accept, then update device to this $candidate */
+                        $device->candidate_id = $candidate->id;
+                        $device->save();
+                    }
 
-                if($device->candidate->id == $candidate->id){
-                    /** update info for device */
-                    /** be careful with $request->all() by */
-                    /** $request->get("device") */
-                    /** at client device[] */
-                    $device->fill($request->all());
-                    $device->save();
+                    if($device->candidate->id == $candidate->id){
+                        /** update info for device */
+                        /** be careful with $request->all() by */
+                        /** $request->get("device") */
+                        /** at client device[] */
+                        $device->fill($request->all());
+                        $device->save();
+                    }
                 }
+                /* device saved when register hitted, but no candiate MAP TO HIM */
+                /* map this one */
+                $device->candidate_id = $candidate->id;
+                $device->save();
             }
         }
 
@@ -124,7 +140,7 @@ class SubmissionController extends Controller{
         if($latestSubmission){
             $createdAt = $latestSubmission->created_at;
             $delta = time() - $createdAt;
-            if($delta < 24 * 60 * 60){
+            if($delta < 1){
                 new SubmissionDeviceFormat($latestSubmission);
                 return $this->res($latestSubmission->toArray(), "only one submission in 24 hr", 422);
             }
