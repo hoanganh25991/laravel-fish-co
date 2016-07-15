@@ -42,4 +42,6 @@ Route::group([
 
     Route::post("redeem", "RedeemController@index");
     Route::post("like", "LikeController@index");
+    
+    Route::post("candidate", "CandidateController@update");
 });

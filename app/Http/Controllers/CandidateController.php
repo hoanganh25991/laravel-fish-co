@@ -2,19 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Candidate;
 use App\Device;
 use App\Http\Requests;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Validator;
 use Response;
-use stdClass;
 
 class CandidateController extends Controller{
+    use ApiResponse;
     const WARNING = "sorry, we still not handle this situation";
     const STATUS_CODE = "statusCode";
     const STATUS_MSG = "statusMsg";
     const DATA = "data";
 
-    public function create(){
+    public function update(Request $request){
+        $validator = Validator::make($request->all(), [
+            "uuid" => "required",
+        ]);
+        /** check validate */
+        if($validator->fails()){
+            return $this->res($validator->getMessageBag()->toArray());
+        }
+
+        $uuid = $request->get("uuid");
+        $device = Device::with("candidate")->where("uuid", $uuid)->first();
+        $candidate = $device->candidate;
+
+        if(!$candidate){
+            $candidate = new Candidate();
+        }
+
+        $candidate->fill($request->all());
+        $candidate->save();
+
+        //map device-candidate
+        $device->candidate_id = $candidate->id;
+        $device->save();
+
+        return $this->res($candidate->toArray());
     }
 
     public function verify(Request $request){
