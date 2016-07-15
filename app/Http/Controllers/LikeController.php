@@ -40,4 +40,31 @@ class LikeController extends Controller{
             return $this->res($request->all(), $e->getMessage(), 422);
         }
     }
+
+    public function unlike(Request $request){
+        $validator = \Validator::make($request->all(), [
+            "uuid" => "required",
+            "submission_id" => "required"
+        ]);
+
+        if($validator->fails()){
+            return $this->res($validator->getMessageBag()->toArray());
+        }
+
+        $uuid = $request->get("uuid");
+        $device = Device::where("uuid", $uuid)->first();
+
+        $submissionId = $request->get("submission_id");
+        $like = Like::where("device_id", $device->id)
+            ->where("submission_id", $submissionId)
+            ->first();
+        if(!$like){
+            return $this->res($request->all(), "no like found, base on request", 422);
+        }
+        
+        $like->delete();
+
+        $log = "like on submission_id: {$submissionId}, device_uuid: {$uuid} deleted";
+        return $this->res($log);
+    }
 }

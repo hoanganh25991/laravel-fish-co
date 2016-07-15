@@ -44,4 +44,6 @@ Route::group([
     Route::post("like", "LikeController@index");
     
     Route::post("candidate", "CandidateController@update");
+    
+    Route::post("unlike", "LikeController@unlike");
 });
