@@ -73,11 +73,22 @@ class LikeController extends Controller{
 
         $uuid = $request->get("uuid");
         $device = Device::where("uuid", $uuid)->first();
-
+        
         $submissionId = $request->get("submission_id");
+        $submissionUnliked = Submission::where("submission_id", $submissionId)->first();
+        
+        if(!$device){
+            return $this->res($request->all(), "no device found", 422);
+        }
+        
+        if(!$submissionUnliked){
+            return $this->res($request->all(), "no submission found", 422);
+        }
+        
         $like = Like::where("device_id", $device->id)
             ->where("submission_id", $submissionId)
             ->first();
+        
         if(!$like){
             return $this->res($request->all(), "no like found, base on request", 422);
         }
@@ -85,7 +96,7 @@ class LikeController extends Controller{
         $like->delete();
 
 //        $log = "like on submission_id: {$submissionId}, device_uuid: {$uuid} deleted";
-        $submissionUnliked = Submission::where("submission_id", $submissionId)->first();
+       
         return $this->res($submissionUnliked->toArray());
     }
 }
