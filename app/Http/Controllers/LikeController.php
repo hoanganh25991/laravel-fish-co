@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Device;
 use App\Like;
+use App\Submission;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -83,7 +84,8 @@ class LikeController extends Controller{
         
         $like->delete();
 
-        $log = "like on submission_id: {$submissionId}, device_uuid: {$uuid} deleted";
-        return $this->res($log);
+//        $log = "like on submission_id: {$submissionId}, device_uuid: {$uuid} deleted";
+        $submissionUnliked = Submission::where("submission_id", $submissionId)->first();
+        return $this->res($submissionUnliked->toArray());
     }
 }
