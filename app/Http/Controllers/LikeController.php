@@ -27,18 +27,37 @@ class LikeController extends Controller{
 
         $device = Device::with("candidate")->where("uuid", $uuid)->first();
 
-        try{
-            $candidate = $device->candidate;
-            /** new like, link to device, candidate, submission */
-            $like = new Like();
-            $like->device_id = $device->id;
-            $like->candidate_id = $candidate->id;
-            $like->submission_id = $submissionId;
-            $like->save();
-            return $this->res($like->toArray());
-        }catch(\Exception $e){
-            return $this->res($request->all(), $e->getMessage(), 422);
+//        try{
+//            $candidate = $device->candidate;
+//            /** new like, link to device, candidate, submission */
+//            $like = new Like();
+//            $like->device_id = $device->id;
+//            $like->candidate_id = $candidate->id;
+//            $like->submission_id = $submissionId;
+//            $like->save();
+//            return $this->res($like->toArray());
+//        }catch(\Exception $e){
+//            return $this->res($request->all(), $e->getMessage(), 422);
+//        }
+        if(!$device){
+            return $this->res($request->all(), "no device found", 422);
         }
+        
+        $like = new Like();
+        
+        //map submission
+        $like->submission_id = $submissionId;
+        
+        //map candidate
+        $candidate = $device->candidate;
+        if($candidate){
+            $like->candidate_id = $candidate->id;
+        }
+        
+        //map device
+        $like->device_id = $device->id;
+        $like->save();
+        return $this->res($like->toArray());
     }
 
     public function unlike(Request $request){
