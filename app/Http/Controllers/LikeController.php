@@ -75,7 +75,7 @@ class LikeController extends Controller{
         $device = Device::where("uuid", $uuid)->first();
         
         $submissionId = $request->get("submission_id");
-        $submissionUnliked = Submission::where("submission_id", $submissionId)->first();
+        $submissionUnliked = Submission::where("id", $submissionId)->first();
         
         if(!$device){
             return $this->res($request->all(), "no device found", 422);
