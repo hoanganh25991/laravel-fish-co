@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Submission;
 use App\SubmissionDeviceFormat;
 use App\Traits\ApiResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -28,7 +29,7 @@ class RedeemController extends Controller{
         $submission = Submission::where("id", $request->get("submission_id"))->first();
 
         if($submission){
-            $submission->redeem_at = time();
+            $submission->redeem_at = Carbon::now();
             $submission->save();
 
             new SubmissionDeviceFormat($submission);
