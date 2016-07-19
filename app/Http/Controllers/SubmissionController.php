@@ -78,6 +78,13 @@ class SubmissionController extends Controller{
         }
 
         if($candidate){
+            /**
+             * update candidate info (name)
+             */
+            $candidate->fill($request->all());
+            $candidate->save();
+            
+
             /** 1-0, has candidate, no device base on uuid found */
             /** this is his new device */
             if(!$device){
@@ -85,12 +92,6 @@ class SubmissionController extends Controller{
                 $device->uuid = $request->get("uuid");
                 $device->candidate_id = $candidate->id;
                 $device->save();
-
-                /**
-                 * update candidate info (name)
-                 */
-                $candidate->fill($request->all());
-                $candidate->save();
             }
 
             /** 1-1, has candidate, device found base on uuid */
