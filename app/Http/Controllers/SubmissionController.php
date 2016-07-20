@@ -31,7 +31,6 @@ class SubmissionController extends Controller{
         $countryIdArray = implode(',', Country::lists("id")->toArray());
         $validator = Validator::make($request->all(), [
             "uuid" => "required",
-            "contact_number" => "required",
             "image" => "required",
             "country_id" => "required|in:{$countryIdArray}",
             "campaign_id" => "required"
@@ -47,88 +46,29 @@ class SubmissionController extends Controller{
          * contact number is IDENTIFIER
          * base on contact number, define candidate
          */
-        $candidate = null;
         $candidate = Candidate::with("device")->where("contact_number", $request->get("contact_number"))->first();
 
-        $device = null;
         $device = Device::with("candidate")->where("uuid", $request->get("uuid"))->first();
-       
-        /**
-         * |0|1|
-         * |0|1|
-         */
+
+        //no candiate, create new one
         if(!$candidate){
-            $candidate = new Candidate($request->all());
+            $candidate = new Candidate();
             $candidate->save();
-            /** 0-0, new candidate, new device */
-            if(!$device){
-                $device = new Device($request->all());
-                $device->uuid = $request->uuid;
-                $device->candidate_id = $candidate->id;
-                $device->save();
-            }
-
-            /** 0-1, no candidate, but device belongTo "someone" */
-            /** many he submit wrong phone number|borrow phone */
-            if($device){
-//                return $this->res($request->all(), "may wrong phone number | borrow phone", 422);
-                $device->candidate_id = $candidate->id;
-                $device->save();
-            }
         }
 
-        if($candidate){
-            /**
-             * update candidate info (name)
-             */
-            $candidate->fill($request->all());
-            $candidate->save();
-            
+        //save candidate info
+        $candidate->fill($request->all());
+        $candidate->save();
 
-            /** 1-0, has candidate, no device base on uuid found */
-            /** this is his new device */
-            if(!$device){
-                $device = new Device($request->all());
-                $device->uuid = $request->get("uuid");
-                $device->candidate_id = $candidate->id;
-                $device->save();
-            }
-
-            /** 1-1, has candidate, device found base on uuid */
-            if($device){
-                $candidateFromDevice  = null;
-                $candidateFromDevice = $device->candidate;
-                
-                /* compare candidate from device vs candiate found */
-                if($candidateFromDevice){
-                    /** compare candidate_id & candidate->id */
-                    if($candidateFromDevice->id != $candidate->id){
-                        /**
-                         * he borrow phone from some one
-                         * NOT ALLOW
-                         */
-//                        return $this->res($request->all(), "borrow phone", 422);
-                        
-                        /* at this point 13/07, accept, then update device to this $candidate */
-                        $device->candidate_id = $candidate->id;
-                        $device->save();
-                    }
-
-                    if($device->candidate->id == $candidate->id){
-                        /** update info for device */
-                        /** be careful with $request->all() by */
-                        /** $request->get("device") */
-                        /** at client device[] */
-                        $device->fill($request->all());
-                        $device->save();
-                    }
-                }
-                /* device saved when register hitted, but no candiate MAP TO HIM */
-                /* map this one */
-                $device->candidate_id = $candidate->id;
-                $device->save();
-            }
+        //no device, create new one
+        if(!$device){
+            $device = new Device($request->all());
+            $device->save();
         }
+
+        //map candidate-device
+        $device->candidate_id = $candidate->id;
+        $device->save();
 
         /** $candidate, $device checked OK */
         
