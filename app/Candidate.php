@@ -9,6 +9,7 @@ class Candidate extends BaseModel{
         "name",
         "email",
         "contact_number",
+        "mailing_list"
     ];
 
     public function submission(){
