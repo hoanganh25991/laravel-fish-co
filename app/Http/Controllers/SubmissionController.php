@@ -46,13 +46,15 @@ class SubmissionController extends Controller{
          * contact number is IDENTIFIER
          * base on contact number, define candidate
          */
-        $candidate = Candidate::with("device")->where("contact_number", $request->get("contact_number"))->first();
+        $contact_number = $request->get("contact_number");
+        $candidate = Candidate::with("device")->where("contact_number", $contact_number)->first();
 
-        $device = Device::with("candidate")->where("uuid", $request->get("uuid"))->first();
+        $uuid = $request->get("uuid");
+        $device = Device::with("candidate")->where("uuid", $uuid)->first();
 
         //no candiate, create new one
         if(!$candidate){
-            $candidate = new Candidate();
+            $candidate = new Candidate(compact("contact_number"));
             $candidate->save();
         }
 
@@ -62,11 +64,12 @@ class SubmissionController extends Controller{
 
         //no device, create new one
         if(!$device){
-            $device = new Device($request->all());
+            $device = new Device(compact("uuid"));
             $device->save();
         }
 
         //map candidate-device
+        $device->fill($request->all());
         $device->candidate_id = $candidate->id;
         $device->save();
 
