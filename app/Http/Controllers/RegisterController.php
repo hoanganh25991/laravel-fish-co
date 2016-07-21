@@ -32,7 +32,8 @@ class RegisterController extends Controller{
         $uuid = $request->get("uuid");
         $device = Device::with([
             "candidate.submission" => function ($relation){
-                $relation->with("image");
+                $relation->with(["image", "like"]);
+//                $relation->with("like");
             }
         ])->where("uuid", $uuid)->first();
 
@@ -56,6 +57,17 @@ class RegisterController extends Controller{
         $submission = null;
         if($candidate){
             $submission = $candidate->submission;
+            
+            foreach($submission as $aSubmission){
+                $like = $aSubmission->like;
+
+                if($like){
+                    $aSubmission->like_count = $like->count();
+                    unset($aSubmission->like);
+                    new SubmissionDeviceFormat($aSubmission);
+                }
+            }
+
             unset($candidate->submission);
         }
 

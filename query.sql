@@ -1,0 +1,1 @@
+SELECT submission.id, `like`.id, count(`like`.id) FROM submission LEFT JOIN `like` ON submission.id = `like`.submission_id GROUP BY submission.id;
