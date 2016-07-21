@@ -6,6 +6,9 @@ use Carbon\Carbon;
 
 trait ApiUtil{
     public function timestamp($value){
+        if(!$value){
+            return null;
+        }
         $carbon = new Carbon($value);
         $unixTimestamp = $carbon->timestamp;
         return $unixTimestamp;

@@ -31,7 +31,7 @@ class Submission extends BaseModel{
     }
 
     public function likeByDevice(){
-        return $this->hasOne(Like::class, "submission_id", "id");
+        return $this->hasMany(Like::class, "submission_id", "id");
     }
 
     public function getRedeemAtAttribute($value){

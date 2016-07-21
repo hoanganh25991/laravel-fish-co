@@ -21,7 +21,7 @@ class SubmissionDeviceFormat{
 
             $likeByDevice = $submission->likeByDevice;
             if($likeByDevice){
-                $submission->like = $likeByDevice;
+                $submission->like_by_device = $likeByDevice;
             }
             /* remove attribute */
 //            unset($submission->like_by_device);

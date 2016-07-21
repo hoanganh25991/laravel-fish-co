@@ -201,10 +201,9 @@ class SubmissionController extends Controller{
             return $this->res($validator->getMessageBag()->toArray(), "", 422);
         }
 
-
-
         $uuid = $request->get("uuid");
-        $device = Device::where("uuid", $uuid)->first();
+        $device = Device::with("candidate")->where("uuid", $uuid)->first();
+
         $deviceId = $device->id;
 
         /** Submissions base on CampaignId */
@@ -218,6 +217,7 @@ class SubmissionController extends Controller{
         /** filter on country Id */
         $countryId = null;
         $countryId = $request->get("country_id");
+
         if($countryId){
             $query = $query->where("country_id", $countryId);
         }
