@@ -194,7 +194,6 @@ class SubmissionController extends Controller{
         /** validate on required field for api to response */
         $validator = Validator::make($request->all(), [
             "uuid" => "required",
-//            "page" => "required",
             "campaign_id" => "required"
         ]);
 
@@ -211,8 +210,9 @@ class SubmissionController extends Controller{
         /** Submissions base on CampaignId */
         $campaignId = $request->get("campaign_id");
         /** return $data */
-        $query = Submission::with(["image", "candidate", "likeByDevice" => function($relation) use($deviceId){
-            $relation->where("device_id", $deviceId);
+        $query = Submission::with(["image", "like", "candidate",
+           "likeByDevice" => function($relation) use($deviceId){
+                $relation->where("device_id", $deviceId);
         }])->where("campaign_id", $campaignId);
         
         /** filter on country Id */
@@ -232,7 +232,9 @@ class SubmissionController extends Controller{
             $offset = $limit * ($page - 1);
             $query->skip($offset)->take($limit);
         }
+        
         $allSubmissions = $query->get();
+        
         foreach($allSubmissions as $s){
             new SubmissionDeviceFormat($s);
         }

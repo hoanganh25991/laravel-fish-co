@@ -26,6 +26,12 @@ class SubmissionDeviceFormat{
             /* remove attribute */
 //            unset($submission->like_by_device);
             unset($submission->likeByDevice);
+
+            $like = $submission->like;
+            if($like){
+                $submission->like_count = $like->count();
+            }
+            unset($submission->like);
     }
 
 }

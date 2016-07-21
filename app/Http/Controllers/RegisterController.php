@@ -59,13 +59,7 @@ class RegisterController extends Controller{
             $submission = $candidate->submission;
             
             foreach($submission as $aSubmission){
-                $like = $aSubmission->like;
-
-                if($like){
-                    $aSubmission->like_count = $like->count();
-                    unset($aSubmission->like);
-                    new SubmissionDeviceFormat($aSubmission);
-                }
+                new SubmissionDeviceFormat($aSubmission);
             }
 
             unset($candidate->submission);
