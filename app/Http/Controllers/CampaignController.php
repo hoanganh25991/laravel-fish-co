@@ -16,9 +16,7 @@ class CampaignController extends Controller{
 //        $allCampaign = Campaign::;
 //        return $this->res($allCampaign->toArray());
 //        $campaigns = DB::select("select *,count(submission.id) as submissions from campaign left join submission on campaign.id = submission.campaign_id GROUP by campaign.id;");
-        $campaigns = Campaign::with(["submission"=> function($relation){
-            $relation->count();
-        }])->get();
+        $campaigns = Campaign::with("submission")->get();
         foreach($campaigns as $campaign){
             $submissions = $campaign->submission;
             unset($campaign->submission);
