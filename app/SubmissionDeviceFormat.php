@@ -20,8 +20,8 @@ class SubmissionDeviceFormat{
             unset($submission->image);
 
             $likeByDevice = $submission->likeByDevice;
-            if($likeByDevice){
-                $submission->like_by_device = $likeByDevice;
+            if($likeByDevice->count() > 0){
+                $submission->like_by_device = $likeByDevice->first();
             }
             /* remove attribute */
 //            unset($submission->like_by_device);
