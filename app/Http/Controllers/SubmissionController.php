@@ -212,7 +212,7 @@ class SubmissionController extends Controller{
         $query = Submission::with(["image", "like", "candidate",
            "likeByDevice" => function($relation) use($deviceId){
                 $relation->where("device_id", $deviceId)->take(1);
-        }])->where("campaign_id", $campaignId);
+        }])->where("campaign_id", $campaignId)->orderBy("created_at", "desc");;
         
         /** filter on country Id */
         $countryId = null;

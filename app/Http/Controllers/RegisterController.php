@@ -32,8 +32,7 @@ class RegisterController extends Controller{
         $uuid = $request->get("uuid");
         $device = Device::with([
             "candidate.submission" => function ($relation){
-                $relation->with(["image", "like"]);
-//                $relation->with("like");
+                $relation->with(["image", "like"])->orderBy("created_at", "desc");
             }
         ])->where("uuid", $uuid)->first();
 
