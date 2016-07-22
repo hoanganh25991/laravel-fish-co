@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Device;
 use App\Like;
 use App\Submission;
+use App\SubmissionDeviceFormat;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -26,20 +27,13 @@ class LikeController extends Controller{
         $uuid = $request->get("uuid");
         $submissionId = $request->get("submission_id");
 
+        $submission = Submission::where("id", $submissionId)->first();
+        if(!$submission){
+            return $this->res($request->all(), "no submission found", 422);
+        }
+
         $device = Device::with("candidate")->where("uuid", $uuid)->first();
 
-//        try{
-//            $candidate = $device->candidate;
-//            /** new like, link to device, candidate, submission */
-//            $like = new Like();
-//            $like->device_id = $device->id;
-//            $like->candidate_id = $candidate->id;
-//            $like->submission_id = $submissionId;
-//            $like->save();
-//            return $this->res($like->toArray());
-//        }catch(\Exception $e){
-//            return $this->res($request->all(), $e->getMessage(), 422);
-//        }
         if(!$device){
             return $this->res($request->all(), "no device found", 422);
         }
@@ -58,7 +52,15 @@ class LikeController extends Controller{
         //map device
         $like->device_id = $device->id;
         $like->save();
-        return $this->res($like->toArray());
+
+        $deviceId = $device->id;
+        $submission = Submission::with(["like", "image", "likeByDevice" => function($relation) use($deviceId){
+            $relation->where("device_id", $deviceId)->take(1);
+        }])->where("id", $submissionId)->first();
+
+        new SubmissionDeviceFormat($submission);
+
+        return $this->res($submission->toArray());
     }
 
     public function unlike(Request $request){
@@ -95,8 +97,18 @@ class LikeController extends Controller{
         
         $like->delete();
 
-//        $log = "like on submission_id: {$submissionId}, device_uuid: {$uuid} deleted";
+        $deviceId = $device->id;
+        $submission = Submission::with(["like", "image", "likeByDevice" => function($relation) use($deviceId){
+            $relation->where("device_id", $deviceId)->take(1);
+        }])->where("id", $submissionId)->first();
+
        
-        return $this->res($submissionUnliked->toArray());
+//        new SubmissionDeviceFormat($submissionUnliked);
+       
+//        return $this->res($submissionUnliked->toArray());
+
+        new SubmissionDeviceFormat($submission);
+
+        return $this->res($submission->toArray());
     }
 }
