@@ -33,9 +33,15 @@ class LikeController extends Controller{
         }
 
         $device = Device::with("candidate")->where("uuid", $uuid)->first();
-
         if(!$device){
             return $this->res($request->all(), "no device found", 422);
+        }
+        $deviceId = $device->id;
+
+        $like = Like::where("device_id", $deviceId)->where("submission_id", $submissionId)->first();
+        
+        if($like){
+            return $this->res($request->all(), "candidate has like this submission", 422);
         }
         
         $like = new Like();
@@ -53,8 +59,7 @@ class LikeController extends Controller{
         $like->device_id = $device->id;
         $like->save();
 
-        $deviceId = $device->id;
-        $submission = Submission::with(["like", "image", "likeByDevice" => function($relation) use($deviceId){
+        $submission = Submission::with(["candidate", "like", "image", "likeByDevice" => function($relation) use($deviceId){
             $relation->where("device_id", $deviceId)->take(1);
         }])->where("id", $submissionId)->first();
 
@@ -98,7 +103,7 @@ class LikeController extends Controller{
         $like->delete();
 
         $deviceId = $device->id;
-        $submission = Submission::with(["like", "image", "likeByDevice" => function($relation) use($deviceId){
+        $submission = Submission::with(["candidate", "like", "image", "likeByDevice" => function($relation) use($deviceId){
             $relation->where("device_id", $deviceId)->take(1);
         }])->where("id", $submissionId)->first();
 
