@@ -10,15 +10,23 @@ class OutletController extends Controller{
     use ApiResponse;
     public function index(){ 
         $outlet = Country::with([
-            "region" => function($relation){
-                $relation->with([
-                    "outlet" => function($re){
-                        $re->orderBy("name", "asc");
+                    //load region in country
+                    "region" => function($region){
+                        //sort region by name
+                        $region->orderBy("name", "asc");
+
+                        //load outlet from region
+                        $region->with([
+                            //sort outlet by name
+                            "outlet" => function($outlet){
+                                $outlet->orderBy("name", "asc");
+                            }
+                        ]);
                     }
-                ]);
-                $relation->orderBy("name", "asc");
-            }
-        ])->orderBy("name", "asc")->get();
+                ])
+                //sort country by name
+                ->orderBy("name", "asc")
+                ->get();
         return $this->res($outlet->toArray());
     }
 }
