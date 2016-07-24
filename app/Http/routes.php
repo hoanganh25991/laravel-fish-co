@@ -10,40 +10,35 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-use App\Device;
-use App\Submission;
-use Illuminate\Http\Request;
-
-/** device HAVE TO SEND TO /api/regiter to get token*/
 Route::group(["prefix" => "api"], function(){
+    //call register to get token
     Route::get("register", "RegisterController@index");
     Route::post("register", "RegisterController@index");
 
     Route::get("outlets", "OutletController@index");
     Route::post("outlets", "OutletController@index");
     
+    //restrict routes by token
+    Route::group(["middleware" => "token"], function(){
+        Route::get("campaigns", "CampaignController@index");
+        Route::post("campaigns", "CampaignController@index");
+
+        Route::get("submissions", "SubmissionController@index");
+        Route::post("submissions", "SubmissionController@index");
+
+        Route::get("submission", "SubmissionController@create");
+        Route::post("submission", "SubmissionController@create");
+
+        Route::post("redeem", "RedeemController@index");
+        Route::post("like", "LikeController@index");
+
+        Route::post("candidate", "CandidateController@update");
+
+        Route::post("unlike", "LikeController@unlike");
+    });
+
+    //test image
     Route::get("images", "ImageController@index");
-    
+    //test function
     Route::get("util", "UtilController@index");
-});
-
-Route::group([
-    "middleware" => "token",
-    "prefix" => "api"
-], function (){
-    Route::get("campaigns", "CampaignController@index");
-    Route::post("campaigns", "CampaignController@index");
-
-    Route::get("submissions", "SubmissionController@index");
-    Route::post("submissions", "SubmissionController@index");
-
-    Route::get("submission", "SubmissionController@create");
-    Route::post("submission", "SubmissionController@create");
-
-    Route::post("redeem", "RedeemController@index");
-    Route::post("like", "LikeController@index");
-    
-    Route::post("candidate", "CandidateController@update");
-    
-    Route::post("unlike", "LikeController@unlike");
 });

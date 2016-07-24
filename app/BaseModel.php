@@ -7,6 +7,8 @@ use App\Traits\ModelForeignKey;
 use App\Traits\ModelIndex;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Expression;
 
 /**
  * Class BaseModel
@@ -36,5 +38,12 @@ class BaseModel extends Model{
     
     public function getUpdatedAtAttribute($value){
         return $this->timestamp($value);
+    }
+    
+    public function addSelectRaw($expression){
+        /** @var Builder $query */
+        $query = $this->query();
+        $query->columns = array_merge((array) $query->columns, (new Expression($expression)));
+        return $query;
     }
 }

@@ -6,33 +6,41 @@ use App\Device;
 use App\Http\Requests;
 use App\SubmissionDeviceFormat;
 use App\Traits\ApiResponse;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Validator;
 
-use App\Http\Requests\ApiRequest;
+use App\Http\Requests\UuidRequest;
 
 class RegisterController extends Controller{
     use ApiResponse;
 
-    public function index(Request $request){
-        /** validate on required field to get json from api */
-        $validator = Validator::make($request->all(), [
-            "uuid" => "required"
-        ]);
-
-        /** validate fail */
-        if($validator->fails()){
-            return $this->res($validator->getMessageBag()->toArray(), "", 422);
-        }
-
-        /** find out device */
-        $device = null;
-
-        /* find him in db */
+    public function index(UuidRequest $request){
+        /* find device in db */
         $uuid = $request->get("uuid");
+        $device = Device::where("uuid", $uuid)->first();
+        $deviceId = $device->id;
+        
         $device = Device::with([
-            "candidate.submission" => function ($relation){
-                $relation->with(["image", "like"])->orderBy("created_at", "desc");
+            "candidate" => function ($candidate){
+                $device = $candidate->getParent();
+                $deviceId = $device->id;
+                $candidate->with([
+                    "submission" => function($submission) use($deviceId){
+                        $submission
+                            ->selectRaw("submission.*, count(like.id) as like_count")
+                            ->orderBy("submission.created_at", "desc")
+                            ->leftJoin("like", "like.submission_id", "=", "submission.id")
+                            ->groupBy("like.id")
+                            ->with("image")
+                            ->with([
+                                "likeByDevice" => function($like) use($deviceId){
+                                    $like->where("device_id", $deviceId);
+                                }
+                            ]);
+                    }
+                ]);
             }
         ])->where("uuid", $uuid)->first();
 
@@ -54,21 +62,22 @@ class RegisterController extends Controller{
 
         /** submission */
         $submission = null;
-        if($candidate){
-            $submission = $candidate->submission;
-            
-            foreach($submission as $aSubmission){
-                new SubmissionDeviceFormat($aSubmission);
-            }
-
-            unset($candidate->submission);
-        }
+//        if($candidate){
+//            $submission = $candidate->submission;
+//
+//            foreach($submission as $aSubmission){
+//                $a = new SubmissionDeviceFormat($aSubmission);
+//                $b = 0;
+//            }
+//
+//            unset($candidate->submission);
+//        }
 
         $r = [
             "token" => $token,
             "device" => $device,
             "candidate" => $candidate,
-            "submissions" => $submission,
+            "submissions" => $candidate->submission,
         ];
         return $this->res($r);
     }

@@ -30,5 +30,9 @@ class Device extends BaseModel{
     public function getLastAccessAttribute($value){
         return $this->timestamp($value);
     }
+    
+    public function loadCandidate(){
+        return self::with("candidate");
+    }
 
 }

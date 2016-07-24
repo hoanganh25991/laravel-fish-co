@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Submission extends BaseModel{
     protected $table = "submission";
@@ -23,18 +24,17 @@ class Submission extends BaseModel{
         return $this->belongsTo(Image::class, "image_id");
     }
 
-//    public function like(){
-//        return $this->belongsToMany(Like::class, null, "submission_id");
-//    }
     public function like(){
         return $this->hasMany(Like::class, "submission_id", "id");
     }
 
     public function likeByDevice(){
-        return $this->hasMany(Like::class, "submission_id", "id");
+        return $this->hasOne(Like::class, "submission_id", "id");
     }
 
     public function getRedeemAtAttribute($value){
         return $this->timestamp($value);
     }
+    
+//    public static function 
 }

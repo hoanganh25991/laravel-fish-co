@@ -19,4 +19,6 @@ class Candidate extends BaseModel{
     public function device(){
         return $this->hasMany(Device::class, "candidate_id", "id");
     }
+
+//    public function
 }
