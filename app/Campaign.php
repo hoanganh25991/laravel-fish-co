@@ -43,4 +43,11 @@ class Campaign extends BaseModel{
     public function getStartAtAttribute($value){
         return $this->timestamp($value);
     }
+    
+    public function scopeSubmissionCount($query){
+        return $query
+            ->selectRaw("campaign.*, count(submission.id) as submission_count")
+            ->leftJoin("submission", "submission.campaign_id", "=", "campaign.id")
+            ->groupBy("campaign.id");
+    }
 }

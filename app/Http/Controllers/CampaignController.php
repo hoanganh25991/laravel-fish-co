@@ -13,10 +13,8 @@ use Response;
 class CampaignController extends Controller{
     use ApiResponse;
     public function index(){
-        $campaigns = Campaign::selectRaw("campaign.*, count(submission.id) as submission_count")
-                        ->leftJoin("submission", "submission.campaign_id", "=", "campaign.id")
-                        ->groupBy("campaign.id")
-                        ->get();
+        $campaigns = Campaign::submissionCount()->get();
+
         return $this->res($campaigns);
     }
 }
