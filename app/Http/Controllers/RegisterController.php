@@ -6,8 +6,11 @@ use App\Device;
 use App\Http\Requests;
 use App\Http\Requests\UuidRequest;
 use App\Submission;
+use App\SubmissionDeviceFormat;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Validator;
 
 class RegisterController extends Controller{
     use ApiResponse;
@@ -15,22 +18,20 @@ class RegisterController extends Controller{
     public function index(UuidRequest $request){
         /* find device in db */
         $uuid = $request->get("uuid");
-
+        $campaignId = $request->get("campaign_id");
         $device = Device::with([
-            "candidate" => function ($candidate){
-                $device = $candidate->getParent();
-                $deviceId = $device->id;
-                $candidate->with([
-                    "submission" => function($submission) use($deviceId){
-                        $submission
-                            ->selectRaw("submission.*, count(like.id) as like_count")
-                            ->orderBy("submission.created_at", "desc")
-                            ->leftJoin("like", "like.submission_id", "=", "submission.id")
-                            ->groupBy("like.id")
-                            ->with("image");
-                    }
-                ]);
-            }
+            "candidate" => function ($candidate) 
+                use ($campaignId){
+                    $candidate->with([
+                        "submission" => function ($submission)
+                            use ( $campaignId){
+                                $submission
+                                    ->campaign($campaignId)
+                                    ->likeCount()
+                                    ->with("image");
+                            }
+                    ]);
+                }
         ])->where("uuid", $uuid)->first();
 
         /* create new device if not found */

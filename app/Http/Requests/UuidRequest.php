@@ -22,10 +22,11 @@ class UuidRequest extends FormRequest{
      */
     public function rules(){
         return [
-            "uuid" => "required"
             /** although we can write token check here, but let it for middleware */
             /** middleware GROUP request for api in to 1 place */
             //            "_token" => "required"
+            "uuid" => "required",
+            "campaign_id" => "required"
         ];
     }
 

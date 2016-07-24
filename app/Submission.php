@@ -62,16 +62,16 @@ class Submission extends BaseModel{
         }
     }
     
-    public function scopeLikeCount(){
-        return $this
+    public function scopeLikeCount($query){
+        return $query
                 ->selectRaw("submission.*, count(like.id) as like_count")
                 ->leftJoin("like", "like.submission_id", "=", "submission.id")
                 ->groupBy("submission.id");
             
     }
     
-    public function scopeCampaign($campaignId){
-        return $this
+    public function scopeCampaign($query, $campaignId){
+        return $query
                 ->orderBy("submission.created_at", "desc")
                 ->where("campaign_id", $campaignId);
     }
