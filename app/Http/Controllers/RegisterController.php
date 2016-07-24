@@ -4,14 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Device;
 use App\Http\Requests;
-use App\SubmissionDeviceFormat;
-use App\Traits\ApiResponse;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
-use Validator;
-
 use App\Http\Requests\UuidRequest;
+use App\Submission;
+use App\Traits\ApiResponse;
+use Illuminate\Database\Eloquent\Collection;
 
 class RegisterController extends Controller{
     use ApiResponse;
@@ -19,9 +15,7 @@ class RegisterController extends Controller{
     public function index(UuidRequest $request){
         /* find device in db */
         $uuid = $request->get("uuid");
-        $device = Device::where("uuid", $uuid)->first();
-        $deviceId = $device->id;
-        
+
         $device = Device::with([
             "candidate" => function ($candidate){
                 $device = $candidate->getParent();
@@ -33,18 +27,13 @@ class RegisterController extends Controller{
                             ->orderBy("submission.created_at", "desc")
                             ->leftJoin("like", "like.submission_id", "=", "submission.id")
                             ->groupBy("like.id")
-                            ->with("image")
-                            ->with([
-                                "likeByDevice" => function($like) use($deviceId){
-                                    $like->where("device_id", $deviceId);
-                                }
-                            ]);
+                            ->with("image");
                     }
                 ]);
             }
         ])->where("uuid", $uuid)->first();
 
-        /* create new device if no one */
+        /* create new device if not found */
         if(!$device){
             $device = new Device($request->all());
             $device->save();
@@ -54,30 +43,26 @@ class RegisterController extends Controller{
         $token = (new TokenController)->get();
 
         /** find candidate */
-        $candidate = null;
-        if($device){
-            $candidate = $device->candidate;
-            unset($device->candidate);
-        }
+        $candidate = $device->candidate;
+        unset($device->candidate);
 
         /** submission */
         $submission = null;
-//        if($candidate){
-//            $submission = $candidate->submission;
-//
-//            foreach($submission as $aSubmission){
-//                $a = new SubmissionDeviceFormat($aSubmission);
-//                $b = 0;
-//            }
-//
-//            unset($candidate->submission);
-//        }
+        if($candidate){
+            $submission = $candidate->submission;
+//            dd($submission);
+            foreach($submission as $singleSubmission){
+                /** @var Submission $singleSubmission */
+                $singleSubmission->transformForDevice();
+            }
+            unset($candidate->submission);
+        }
 
         $r = [
             "token" => $token,
             "device" => $device,
             "candidate" => $candidate,
-            "submissions" => $candidate->submission,
+            "submissions" => $submission,
         ];
         return $this->res($r);
     }
