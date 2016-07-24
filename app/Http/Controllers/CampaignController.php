@@ -12,16 +12,11 @@ use Response;
 
 class CampaignController extends Controller{
     use ApiResponse;
-    public function index(Request $request){
-//        $allCampaign = Campaign::;
-//        return $this->res($allCampaign->toArray());
-//        $campaigns = DB::select("select *,count(submission.id) as submissions from campaign left join submission on campaign.id = submission.campaign_id GROUP by campaign.id;");
-        $campaigns = Campaign::with("submission")->get();
-        foreach($campaigns as $campaign){
-            $submissions = $campaign->submission;
-            unset($campaign->submission);
-            $campaign->submission_count = $submissions->count();
-        }
+    public function index(){
+        $campaigns = Campaign::selectRaw("campaign.*, count(submission.id) as submission_count")
+                        ->leftJoin("submission", "submission.campaign_id", "=", "campaign.id")
+                        ->groupBy("campaign.id")
+                        ->get();
         return $this->res($campaigns);
     }
 }
