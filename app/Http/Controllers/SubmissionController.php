@@ -147,15 +147,6 @@ class SubmissionController extends Controller{
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(UuidRequest $request){
-        //validate on required field for api to response */
-        $validator = Validator::make($request->all(), [
-            "campaign_id" => "required"
-        ]);
-
-        if($validator->fails()){
-            return $this->res($validator->getMessageBag()->toArray(), "", 422);
-        }
-
         $uuid = $request->get("uuid");
         $device = Device::with("candidate")->where("uuid", $uuid)->first();
 
