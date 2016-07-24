@@ -154,7 +154,8 @@ class SubmissionController extends Controller{
         $deviceId = $device->id;
         $campaignId = $request->get("campaign_id");
         /** return $data */
-        $query = Submission::campaign($campaignId)
+        $query = Submission::
+            campaign($campaignId)
             ->likeCount()
             ->with([
                 "image",

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Device;
+use App\Http\Requests\UuidRequest;
 use App\Like;
 use App\Submission;
 use App\SubmissionDeviceFormat;
@@ -14,9 +15,8 @@ use App\Http\Requests;
 class LikeController extends Controller{
     use ApiResponse;
 
-    public function index(Request $request){
+    public function index(UuidRequest $request){
         $validator = \Validator::make($request->all(), [
-            "uuid" => "required",
             "submission_id" => "required"
         ]);
 
@@ -26,19 +26,29 @@ class LikeController extends Controller{
 
         $uuid = $request->get("uuid");
         $submissionId = $request->get("submission_id");
+        $campaignId = $request->get("campaign_id");
 
-        $submission = Submission::where("id", $submissionId)->first();
+        $submission = Submission::
+                        campaign($campaignId)    
+                        ->where("id", $submissionId)
+                        ->first();
         if(!$submission){
             return $this->res($request->all(), "no submission found", 422);
         }
 
-        $device = Device::with("candidate")->where("uuid", $uuid)->first();
+        $device = Device::
+                    with("candidate")
+                    ->where("uuid", $uuid)
+                    ->first();
         if(!$device){
             return $this->res($request->all(), "no device found", 422);
         }
         $deviceId = $device->id;
 
-        $like = Like::where("device_id", $deviceId)->where("submission_id", $submissionId)->first();
+        $like = Like::
+                    where("device_id", $deviceId)
+                    ->where("submission_id", $submissionId)
+                    ->first();
         
         if($like){
             return $this->res($request->all(), "candidate has like this submission", 422);
@@ -59,18 +69,28 @@ class LikeController extends Controller{
         $like->device_id = $device->id;
         $like->save();
 
-        $submission = Submission::with(["candidate", "like", "image", "likeByDevice" => function($relation) use($deviceId){
-            $relation->where("device_id", $deviceId)->take(1);
-        }])->where("id", $submissionId)->first();
+        
+        //load submission (which liked) for response
+        $submission = Submission::
+                        campaign($campaignId)
+                        ->with([
+                            "candidate",
+                            "like", 
+                            "image", 
+                            "likeByDevice" => function($like) 
+                                use($deviceId){
+                                    $like->where("device_id", $deviceId);
+                                }])
+                        ->where("id", $submissionId)
+                        ->first();
 
-        new SubmissionDeviceFormat($submission);
+        $submission->transformForDevice();
 
-        return $this->res($submission->toArray());
+        return $this->res($submission);
     }
 
     public function unlike(Request $request){
         $validator = \Validator::make($request->all(), [
-            "uuid" => "required",
             "submission_id" => "required"
         ]);
 
@@ -79,10 +99,18 @@ class LikeController extends Controller{
         }
 
         $uuid = $request->get("uuid");
+        
         $device = Device::where("uuid", $uuid)->first();
         
+        $campaignId = $request->get("campaign_id");
+        
         $submissionId = $request->get("submission_id");
-        $submissionUnliked = Submission::where("id", $submissionId)->first();
+        
+        
+        $submissionUnliked = Submission::
+                                campaign($campaignId)
+                                ->where("id", $submissionId)
+                                ->first();
         
         if(!$device){
             return $this->res($request->all(), "no device found", 422);
@@ -92,28 +120,35 @@ class LikeController extends Controller{
             return $this->res($request->all(), "no submission found", 422);
         }
         
-        $like = Like::where("device_id", $device->id)
-            ->where("submission_id", $submissionId)
-            ->first();
+        $like = Like::
+                    where("device_id", $device->id)
+                    ->where("submission_id", $submissionId)
+                    ->first();
         
         if(!$like){
             return $this->res($request->all(), "no like found, base on request", 422);
         }
         
         $like->delete();
-
+        
+        
         $deviceId = $device->id;
-        $submission = Submission::with(["candidate", "like", "image", "likeByDevice" => function($relation) use($deviceId){
-            $relation->where("device_id", $deviceId)->take(1);
-        }])->where("id", $submissionId)->first();
+        //load submission (which unliked) for response
+        $submission = Submission::
+        campaign($campaignId)
+            ->with([
+                "candidate",
+                "like",
+                "image",
+                "likeByDevice" => function($like)
+                use($deviceId){
+                    $like->where("device_id", $deviceId);
+                }])
+            ->where("id", $submissionId)
+            ->first();
 
-       
-//        new SubmissionDeviceFormat($submissionUnliked);
-       
-//        return $this->res($submissionUnliked->toArray());
+        $submission->transformForDevice();
 
-        new SubmissionDeviceFormat($submission);
-
-        return $this->res($submission->toArray());
+        return $this->res($submission);
     }
 }

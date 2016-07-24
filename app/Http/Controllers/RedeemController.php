@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Campaign;
+use App\Http\Requests\UuidRequest;
 use App\Submission;
 use App\SubmissionDeviceFormat;
 use App\Traits\ApiResponse;
@@ -13,10 +15,9 @@ use App\Http\Requests;
 class RedeemController extends Controller{
     use ApiResponse;
 
-    public function index(Request $request){
+    public function index(UuidRequest $request){
         /** required field to call this API */
         $validator = \Validator::make($request->all(), [
-            "uuid" => "required",
             "submission_id" => "required",
         ]);
 
@@ -25,17 +26,21 @@ class RedeemController extends Controller{
         }
 
         /** find $submission */
+        $campaignId = $request->get("campaign_id");
+
         $submission = null;
-        $submission = Submission::where("id", $request->get("submission_id"))->first();
+        $submission = Submission::
+            campaign($campaignId)
+            ->where("id", $request->get("submission_id"))->first();
 
         if($submission){
             $submission->redeem_at = Carbon::now();
             $submission->save();
 
-            new SubmissionDeviceFormat($submission);
+            $submission->transformForDevice();
             return $this->res($submission->toArray());
         }
 
-        return $this->res($request->all(), "", 422);
+        return $this->res($request->all(), "submission not found", 422);
     }
 }
