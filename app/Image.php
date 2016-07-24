@@ -35,7 +35,7 @@ class Image extends BaseModel{
         "width",
         "height"
     ];
-    
+
     protected $hidden = ["name"];
 
     public function setNameAttribute($value){
@@ -69,7 +69,42 @@ class Image extends BaseModel{
         return $link;
     }
 
-    public static function getUploadDir(){
-        return substr(base_path(), 0, strrpos(base_path(), "/")) . DIRECTORY_SEPARATOR . "uploads";
+    public function storeImageInUpload(){
+        //move from temp to upload folder
+        $imageFile = $_FILES["image"];
+        $fileNameWithExt = $imageFile["name"];
+
+        //NO SPACE in file name by md5  */
+        $fileName = rawurlencode(pathinfo($fileNameWithExt, PATHINFO_FILENAME));
+        $extension = pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
+        $fileNameWithExt = "{$fileName}.{$extension}";
+
+        // IF FILE NAME EXIST, run loop while
+        $tmpName = $fileName;
+        $outputDir = $this->getUploadDir();
+        if(!is_dir($outputDir) && !file_exists($outputDir)){
+            mkdir($outputDir, 777, true);
+        }
+
+        // run loop
+        $i = 0;
+        while(file_exists($outputDir . "/" . $fileName . "." . $extension)){
+            $fileName = "{$tmpName}_{$i}";
+            $fileNameWithExt = "{$fileName}.{$extension}";
+            $i++;
+        }
+
+        $this->path = $fileNameWithExt;
+
+        $imagePath = $outputDir . "/" . $fileNameWithExt;
+
+        $tmpFileMoved = move_uploaded_file($imageFile["tmp_name"], $imagePath);
+        if(!$tmpFileMoved){
+            throw new \Exception("move image file fail");
+        }
+        return [
+            "file_name" => $fileNameWithExt,
+            "image_path" => $imagePath
+        ];
     }
 }

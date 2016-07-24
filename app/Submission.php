@@ -61,4 +61,18 @@ class Submission extends BaseModel{
             unset($submission->likeByDevice);
         }
     }
+    
+    public function scopeLikeCount(){
+        return $this
+                ->selectRaw("submission.*, count(like.id) as like_count")
+                ->leftJoin("like", "like.submission_id", "=", "submission.id")
+                ->groupBy("submission.id");
+            
+    }
+    
+    public function scopeCampaign($campaignId){
+        return $this
+                ->orderBy("submission.created_at", "desc")
+                ->where("campaign_id", $campaignId);
+    }
 }

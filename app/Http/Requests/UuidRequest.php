@@ -2,15 +2,16 @@
 
 namespace App\Http\Requests;
 
-class UuidRequest extends Request
-{
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
+
+class UuidRequest extends FormRequest{
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize(){
         return true;
     }
 
@@ -19,13 +20,16 @@ class UuidRequest extends Request
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules(){
         return [
             "uuid" => "required"
             /** although we can write token check here, but let it for middleware */
             /** middleware GROUP request for api in to 1 place */
-//            "_token" => "required"
+            //            "_token" => "required"
         ];
+    }
+
+    public function response(array $errors){
+        return new JsonResponse($errors, 422);
     }
 }

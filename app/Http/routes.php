@@ -10,6 +10,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+use App\Http\Controllers\SubmissionController;
+use App\Http\Requests\UuidRequest;
+
 Route::group(["prefix" => "api"], function(){
     //call register to get token
     Route::get("register", "RegisterController@index");
@@ -26,7 +29,6 @@ Route::group(["prefix" => "api"], function(){
         Route::get("submissions", "SubmissionController@index");
         Route::post("submissions", "SubmissionController@index");
 
-        Route::get("submission", "SubmissionController@create");
         Route::post("submission", "SubmissionController@create");
 
         Route::post("redeem", "RedeemController@index");
