@@ -8,6 +8,7 @@ use App\Like;
 use App\Submission;
 use App\SubmissionDeviceFormat;
 use App\Traits\ApiResponse;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -45,14 +46,16 @@ class LikeController extends Controller{
         }
         $deviceId = $device->id;
 
-        $like = Like::
-                    where("device_id", $deviceId)
-                    ->where("submission_id", $submissionId)
-                    ->first();
-        
-        if($like){
-            return $this->res($request->all(), "candidate has like this submission", 422);
-        }
+        //instead of checking by query
+        //check by unique key (submission_id, device_id)
+//        $like = Like::
+//                    where("device_id", $deviceId)
+//                    ->where("submission_id", $submissionId)
+//                    ->first();
+//        
+//        if($like){
+//            return $this->res($request->all(), "candidate has like this submission", 422);
+//        }
         
         $like = new Like();
         
@@ -67,7 +70,13 @@ class LikeController extends Controller{
         
         //map device
         $like->device_id = $device->id;
-        $like->save();
+        
+        //if save fail > wrong when try to like 2 times
+        try{
+            $like->save();
+        }catch(QueryException $e){
+            return $this->res($request->all(), $e->getMessage(), 422);            
+        }
 
         
         //load submission (which liked) for response
@@ -75,12 +84,12 @@ class LikeController extends Controller{
                         campaign($campaignId)
                         ->with([
                             "candidate",
-                            "like", 
                             "image", 
-                            "likeByDevice" => function($like) 
-                                use($deviceId){
-                                    $like->where("device_id", $deviceId);
-                                }])
+//                            "likeByDevice" => function($like)
+//                                use($deviceId){
+//                                    $like->where("device_id", $deviceId);
+//                                }
+                        ])
                         ->where("id", $submissionId)
                         ->first();
 
@@ -121,8 +130,8 @@ class LikeController extends Controller{
         }
         
         $like = Like::
-                    where("device_id", $device->id)
-                    ->where("submission_id", $submissionId)
+                    where("submission_id", $submissionId)
+                    ->where("device_id", $device->id)
                     ->first();
         
         if(!$like){
@@ -135,17 +144,18 @@ class LikeController extends Controller{
         $deviceId = $device->id;
         //load submission (which unliked) for response
         $submission = Submission::
-        campaign($campaignId)
-            ->with([
-                "candidate",
-                "like",
-                "image",
-                "likeByDevice" => function($like)
-                use($deviceId){
-                    $like->where("device_id", $deviceId);
-                }])
-            ->where("id", $submissionId)
-            ->first();
+                        campaign($campaignId)
+                        ->with([
+                            "candidate",
+                            "like",
+                            "image",
+                            "likeByDevice" => function($like)
+                            use($deviceId){
+                                $like->where("device_id", $deviceId);
+                            }
+                        ])
+                        ->where("id", $submissionId)
+                        ->first();
 
         $submission->transformForDevice();
 
